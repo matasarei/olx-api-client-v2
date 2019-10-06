@@ -2,55 +2,61 @@
 
 namespace Gentor\Olx\Api;
 
-
 /**
  * Class Adverts
+ *
  * @package Gentor\Olx\Api
  */
-class Adverts
+class Adverts extends ApiResource
 {
-    /** @var Client $client */
-    private $client;
-
     /**
-     * Adverts constructor.
-     * @param Client $client
+     * {@inheritdoc}
      */
-    public function __construct(Client $client)
+    public function getEndpoint()
     {
-        $this->client = $client;
+        return 'partner/adverts';
     }
 
     /**
-     * @param int $page
      * @param int $limit
+     * @param int $offset
+     *
+     * @return array|mixed|null
+     *
+     * @throws OlxException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function list($limit = 0, $offset = 0)
+    {
+        if ($limit > 0) {
+            return $this->getWithLimit($limit, $offset);
+        }
+
+        return $this->getAll();
+    }
+
+    /**
+     * @param array $advert
+     *
      * @return array
+     *
+     * @throws OlxException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function get($page = 1, $limit = 500)
+    public function create(array $advert)
     {
-        $response = $this->client->request('GET', 'open/account/adverts', [
-            'page' => $page,
-            'limit' => $limit
-        ]);
-
-        return !empty($response->results) ? $response->results : [];
+        return $this->request('POST', $this->getEndpoint(), $advert);
     }
 
     /**
-     * @param $id
-     * @return \stdClass
+     * @param int $id
+     *
+     * @throws OlxException
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function find($id)
+    public function delete(int $id)
     {
-        return $this->client->request('GET', "open/account/adverts/{$id}");
-    }
-
-    /**
-     * @param $id
-     * @return \stdClass
-     */
-    public function delete($id)
-    {
-        return $this->client->request('DELETE', "open/account/adverts/{$id}");
+        $this->client->request('DELETE', "partner/adverts/{$id}");
     }
 }

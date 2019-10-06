@@ -2,86 +2,33 @@
 
 namespace Gentor\Olx\Api;
 
-
 /**
  * Class Categories
+ *
  * @package Gentor\Olx\Api
  */
-class Categories
+class Categories extends ApiResource
 {
-    /** @var Client $client */
-    private $client;
-
     /**
-     * Categories constructor.
-     * @param Client $client
+     * {@inheritdoc}
      */
-    public function __construct(Client $client)
+    public function getEndpoint()
     {
-        $this->client = $client;
+        return 'partner/categories';
     }
 
     /**
-     * @param null $parentId
-     * @return array|\stdClass
-     */
-    public function get($parentId = null)
-    {
-        $response = $this->client->request('GET', 'open/categories' . ($parentId ? ('/' . $parentId) : ''));
-
-        if ($parentId) {
-            return $response;
-        }
-
-        return !empty($response->results) ? $response->results : [];
-    }
-
-    /**
-     * @param null $parentId
-     * @return array|\stdClass
-     */
-    public function getRecursive($parentId = null)
-    {
-        $categories = $this->get($parentId);
-
-        if (is_array($categories)) {
-            foreach ($categories as $category) {
-                if (!empty($category->children)) {
-                    foreach ($category->children as $row => $child) {
-                        $category->children[$row] = $this->getRecursive($child);
-                    }
-                }
-            }
-        } elseif (is_object($categories) && !empty($categories->children)) {
-            foreach ($categories->children as $row => $child) {
-                $categories->children[$row] = $this->getRecursive($child);
-            }
-        }
-
-        return $categories;
-    }
-
-    /**
-     * @param null $categories
+     * @param int $categoryId
+     *
      * @return array
+     *
+     * @throws OlxException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getFlat($categories = null)
+    public function getAttributes(int $categoryId)
     {
-        $categories = is_null($categories) ? $this->getRecursive() : $categories;
-        $result = [];
+        $response = $this->client->request('GET', sprintf('%s/%d/attributes', $this->getEndpoint(), $categoryId));
 
-        foreach ($categories as $category) {
-            $result[] = (object)[
-                'id' => $category->id,
-                'name' => array_values((array)$category->names)[0],
-                'parent_id' => !empty($category->parent_id) ? $category->parent_id : null,
-            ];
-
-            if (!empty($category->children)) {
-                $result = array_merge($result, $this->getFlat($category->children));
-            }
-        }
-
-        return $result;
+        return $response['data'];
     }
 }

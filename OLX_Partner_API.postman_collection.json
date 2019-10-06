@@ -1,0 +1,2055 @@
+{
+	"info": {
+		"name": "OLX Partner API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "/api/open/oauth/token - client_credentials",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "{{scope}}",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{client_id}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/open/oauth/token",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"open",
+								"oauth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/open/oauth/token - authorization_code",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "{{scope}}",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{client_id}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/open/oauth/token",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"open",
+								"oauth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/open/oauth/token - refresh_token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "refresh_token",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{client_id}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}",
+									"type": "text"
+								},
+								{
+									"key": "refresh_token",
+									"value": "{{refresh_token}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/open/oauth/token",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"open",
+								"oauth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "/api/partner/users/me",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/users/me",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/users/{userId}",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/users/{userId}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"users",
+								"{userId}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/users/me/account-balance",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/users/me/account-balance",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"users",
+								"me",
+								"account-balance"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/users/me/payment-methods",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/users/me/payment-methods",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"users",
+								"me",
+								"payment-methods"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Business",
+			"item": [
+				{
+					"name": "/api/partner/users-business/me",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/users-business/me",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"users-business",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/users-business/me",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"name\",\n\t\"description\": \"description\",\n\t\"subdomain\": \"subdomain\",\n\t\"address\": \"address\",\n\t\"website_url\": \"http://example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/partner/users-business/me",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"users-business",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/users-business/me/logos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/users-business/me/logos",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"users-business",
+								"me",
+								"logos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/users-business/me/logos",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"url\": \"http://example.com/image.jpg\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/partner/users-business/me/logos",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"users-business",
+								"me",
+								"logos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/users-business/me/logos/{logoId}",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/partner/users-business/me/logos/{logoId}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"users-business",
+								"me",
+								"logos",
+								"{logoId}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/users-business/me/banners",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/users-business/me/banners",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"users-business",
+								"me",
+								"banners"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/users-business/me/banners",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"url\": \"http://example.com/banner.jpg\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/partner/users-business/me/banners",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"users-business",
+								"me",
+								"banners"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/users-business/me/banners/{bannerId}",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/partner/users-business/me/banners/{bannerId}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"users-business",
+								"me",
+								"banners",
+								"{bannerId}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Adverts",
+			"item": [
+				{
+					"name": "/api/partner/adverts",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"To jest tytuł 3\",\n  \"description\": \"To jest opis, mój opis to jest 3\",\n  \"category_id\": 224,\n  \"advertiser_type\": \"private\",\n  \"external_url\": \"https://www.olx.bg\",\n  \"external_id\": \"12345\",\n  \"contact\": {\n    \"name\": \"daniel\",\n    \"phone\": \"089123134\"\n  },\n  \"location\": {\n    \"city_id\": 1,\n    \"latitude\": 53.92038,\n    \"longitude\": 17.86630\n  },\n  \"price\": {\n    \"value\": 12300\n  },\n  \"attributes\": [\n      {\n        \"code\": \"state\",\n        \"value\": \"used\"\n      },\n      {\n        \"code\": \"size\",\n        \"value\": 35\n      },\n      {\n        \"code\": \"type\",\n        \"value\": \"woman\"\n      }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/partner/adverts",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"adverts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/adverts/{advertId}",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"This is updated title\",\n  \"description\": \"This is updated description\",\n  \"category_id\": 123456,\n  \"advertiser_type\": \"private\",\n  \"external_url\": \"http://example.com/123\",\n  \"external_id\": \"12345\",\n  \"contact\": {\n    \"name\": \"name\",\n    \"phone\": \"132456789\"\n  },\n  \"location\": {\n  \t\"city_id\": 1,\n    \"latitude\": 53.00000,\n    \"longitude\": 17.00000\n  },\n  \"price\": {\n    \"value\": 124\n  },\n  \"attributes\": [\n      {\n        \"code\": \"state\",\n        \"value\": \"used\"\n      },\n      {\n        \"code\": \"size\",\n        \"value\": 35\n      },\n      {\n      \t\"code\": \"type\",\n      \t\"value\": \"woman\"\n      }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/partner/adverts/{advertId}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"adverts",
+								"{advertId}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/adverts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/adverts",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"adverts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/adverts/{advertId}",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/adverts/{advertId}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"adverts",
+								"{advertId}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/adverts/{advertId}",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/partner/adverts/{advertId}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"adverts",
+								"{advertId}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/adverts/{advertId}/commands - activate",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"command\": \"activate\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/partner/adverts/{advertId}/commands",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"adverts",
+								"{advertId}",
+								"commands"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/adverts/{advertId}/commands - refresh",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"command\": \"refresh\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/partner/adverts/{advertId}/commands",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"adverts",
+								"{advertId}",
+								"commands"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/adverts/{advertId}/commands - deactivate",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"command\": \"deactivate\",\n\t\"is_success\": true\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/partner/adverts/{advertId}/commands",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"adverts",
+								"{advertId}",
+								"commands"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Advert statistics",
+			"item": [
+				{
+					"name": "/api/partner/adverts/{advertId}/statistics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/adverts/{advertId}/statistics",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"adverts",
+								"{advertId}",
+								"statistics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/adverts/{advertId}/statistics/phone-views",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/partner/adverts/{advertId}/statistics/phone-views",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"adverts",
+								"{advertId}",
+								"statistics",
+								"phone-views"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/adverts/{advertId}/statistics/advert-views",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/partner/adverts/{advertId}/statistics/advert-views",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"adverts",
+								"{advertId}",
+								"statistics",
+								"advert-views"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Advert logo",
+			"item": [
+				{
+					"name": "/api/partner/adverts/{advertId}/logos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/adverts/{advertId}/logos",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"adverts",
+								"{advertId}",
+								"logos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/adverts/{advertId}/logos/{logoId}",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/partner/adverts/{advertId}/logos/{logoId}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"adverts",
+								"{advertId}",
+								"logos",
+								"{logoId}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/adverts/{advertId}/logos",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"url\" : \"https://i.ytimg.com/vi/SfLV8hD7zX4/maxresdefault.jpg\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/partner/adverts/{advertId}/logos",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"adverts",
+								"{advertId}",
+								"logos"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Packets",
+			"item": [
+				{
+					"name": "/api/partner/packets",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/packets?category_id={categoryId}&payment_method=account",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"packets"
+							],
+							"query": [
+								{
+									"key": "category_id",
+									"value": "{categoryId}"
+								},
+								{
+									"key": "payment_method",
+									"value": "account"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/users/me/packets",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/users/me/packets",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"users",
+								"me",
+								"packets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/users/me/packets",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"payment_method\": \"account\",\n\t\"category_id\": 12345,\n\t\"size\": 10,\n\t\"is_premium\": false\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/partner/users/me/packets",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"users",
+								"me",
+								"packets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/adverts/{advertId}/packets",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"payment_method\": \"account\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/partner/adverts/{advertId}/packets",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"adverts",
+								"{advertId}",
+								"packets"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Paid features",
+			"item": [
+				{
+					"name": "/api/partner/paid-features",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/paid-features",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"paid-features"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/adverts/{advertId}/paid-features",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"payment_method\": \"account\",\n\t\"code\": \"promoted_ad_7\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/partner/adverts/{advertId}/paid-features",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"adverts",
+								"{advertId}",
+								"paid-features"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/adverts/{advertId}/paid-features",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/adverts/{advertId}/paid-features",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"adverts",
+								"{advertId}",
+								"paid-features"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payments",
+			"item": [
+				{
+					"name": "/api/partner/users/me/billing",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/users/me/billing",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"users",
+								"me",
+								"billing"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/users/me/prepaid-invoices",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/users/me/prepaid-invoices",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"users",
+								"me",
+								"prepaid-invoices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/users/me/postpaid-invoices",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/users/me/postpaid-invoices",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"users",
+								"me",
+								"postpaid-invoices"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Threads & messages",
+			"item": [
+				{
+					"name": "/api/partner/threads",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/threads",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"threads"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/threads/{threadId}",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/partner/threads/{threadId}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"partner",
+								"threads",
+								"{threadId}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/threads/{threadId}/messages",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/threads/{threadId}/messages",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"threads",
+								"{threadId}",
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/threads/{threadId}/messages",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"text\": \"This is my test message\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/partner/threads/{threadId}/messages",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"threads",
+								"{threadId}",
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/threads/{threadId}/commands - mark as read",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"command\": \"mark-as-read\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/partner/threads/{threadId}/commands",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"threads",
+								"{threadId}",
+								"commands"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/threads/{threadId}/commands - if favourite",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"command\": \"set-favourite\",\n\t\"favourite\": true\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/partner/threads/{threadId}/commands",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"threads",
+								"{threadId}",
+								"commands"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cities & districts",
+			"item": [
+				{
+					"name": "/api/partner/cities",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/cities",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"cities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/cities/{cityId}",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/cities/{cityId}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"cities",
+								"{cityId}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/cities/{cityId}/districts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/cities/{cityId}/districts",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"cities",
+								"{cityId}",
+								"districts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/regions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/regions",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"regions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/regions/{regionId}",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/regions/{regionId}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"regions",
+								"{regionId}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/districts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/districts",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"districts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/districts/{districtId}",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/districts/{districtId}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"districts",
+								"{districtId}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/locations",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/locations/?latitude={lat}&longitude={lon}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"locations",
+								""
+							],
+							"query": [
+								{
+									"key": "latitude",
+									"value": "{lat}"
+								},
+								{
+									"key": "longitude",
+									"value": "{lon}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Languages & currencies",
+			"item": [
+				{
+					"name": "/api/partner/languages",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/languages",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"languages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/currencies",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/currencies",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"currencies"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"id": "5e1438e9-f2de-44e8-bd9f-a327e66d0661",
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"id": "91e24a95-c05e-4b72-86d2-ca17e8a7753a",
+						"type": "text/javascript"
+					}
+				}
+			]
+		},
+		{
+			"name": "Categories & attributes",
+			"item": [
+				{
+					"name": "/api/partner/categories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/categories",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/categories/{categoryId}",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/categories/{categoryId}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"categories",
+								"{categoryId}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/partner/categories/{categoryId}/attributes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Version",
+								"value": "{{version}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/partner/categories/{categoryId}/attributes",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"partner",
+								"categories",
+								"{categoryId}",
+								"attributes"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"exec": [
+					""
+				],
+				"id": "128f2e9b-5316-4cab-bbd8-9d2d250f2975",
+				"type": "text/javascript"
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"exec": [
+					""
+				],
+				"id": "83fe841e-f46f-4e58-9cf2-746b70d39f3b",
+				"type": "text/javascript"
+			}
+		}
+	]
+}
