@@ -1,20 +1,29 @@
 {
-    "name": "gentor/olx-api-client",
-    "description": "OLX Api Client",
+    "name": "matasarei/olx-api-client-v2",
+    "description": "OLX API Client v2",
     "type": "library",
     "license": "MIT",
     "authors": [
         {
             "name": "Evgeni Nurkov",
             "email": "evgeni.nurkov@gmail.com"
+        },
+        {
+            "name": "Yevhen Matasar",
+            "email": "matasar.ei@gmail.com"
         }
     ],
     "require": {
-        "guzzlehttp/guzzle": "^6.3"
+        "php": ">=7.0",
+        "guzzlehttp/guzzle": "^6.3",
+        "ext-json": "*"
     },
     "autoload": {
         "psr-4": {
             "Gentor\\Olx\\": "src/"
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6"
     }
 }

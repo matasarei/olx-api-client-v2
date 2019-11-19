@@ -2,37 +2,51 @@
 
 namespace Gentor\Olx\Api;
 
-
 /**
  * Class Cities
+ *
  * @package Gentor\Olx\Api
  */
-class Cities
+class Cities extends ApiResource
 {
-    /** @var Client $client */
-    private $client;
-
     /**
-     * Cities constructor.
-     * @param Client $client
+     * {@inheritdoc}
      */
-    public function __construct(Client $client)
+    public function getEndpoint()
     {
-        $this->client = $client;
+        return 'partner/cities';
     }
 
     /**
-     * @param int $page
      * @param int $limit
-     * @return array
+     * @param int $offset
+     * @return array|null
+     *
+     * @throws OlxException
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function get($page = 1, $limit = 500)
+    public function list($limit = 0, $offset = 0)
     {
-        $response = $this->client->request('GET', 'open/cities', [
-            'page' => $page,
-            'limit' => $limit
-        ]);
+        if ($limit > 0) {
+            return $this->getWithLimit($limit, $offset);
+        }
 
-        return !empty($response->results) ? $response->results : [];
+        return $this->getAll();
+    }
+
+    /**
+     * @param int $cityId
+     *
+     * @return array
+     *
+     * @throws OlxException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getCityDistricts(int $cityId)
+    {
+        $response = $this->client->request('GET', sprintf('%s/%d/districts', $this->getEndpoint(), $cityId));
+
+        return $response['data'];
     }
 }

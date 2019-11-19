@@ -5,7 +5,8 @@ namespace Gentor\Olx\Api;
 use Exception;
 
 /**
- * Class OlxException
+ * Class OlxExceptionde
+ *
  * @package Gentor\Olx\Api
  */
 class OlxException extends Exception
@@ -14,13 +15,12 @@ class OlxException extends Exception
     protected $details;
 
     /**
-     * OlxException constructor.
      * @param string $message
      * @param int $code
-     * @param Exception $details
+     * @param \stdClass|null $details
      * @param Exception|null $previous
      */
-    public function __construct($message = "", $code = 0, $details, Exception $previous = null)
+    public function __construct($message = "", $code = 0, $details = null, Exception $previous = null)
     {
         $this->details = $details;
         parent::__construct($message, $code, $previous);
