@@ -6,10 +6,17 @@ use Gentor\Olx\Api\Credentials;
 use Gentor\Olx\Api\OlxException;
 use Gentor\Olx\Utils\AdvertBuilder;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Util\Configuration;
 
 final class ClientTest extends TestCase
 {
+    const CONFIG_KEYS = [
+        'client_id',
+        'client_secret',
+        'country_iso',
+        'account_token',
+        'refresh_token',
+    ];
+
     /**
      * @var array
      */
@@ -28,8 +35,12 @@ final class ClientTest extends TestCase
 
         $config = json_decode(file_get_contents($configFile), true);
 
-        if (empty($config['client_id']) || empty($config['client_id']) || empty($config['country_iso']) || empty($config['account_token'])) {
-            $this->fail("Invalid configuration, please check config.json!");
+        foreach (self::CONFIG_KEYS as $key) {
+            if (!empty($config[$key])) {
+                continue;
+            }
+
+            $this->fail(sprintf('Parameter `%s` should not be empty, please check config.json!', $key));
         }
 
         $this->config = $config;
@@ -46,6 +57,21 @@ final class ClientTest extends TestCase
 
         $this->assertEquals($this->config['client_id'], $credentials->getClientId());
         $this->assertEquals($this->config['client_secret'], $credentials->getClientSecret());
+    }
+
+    /**
+     * @throws OlxException
+     */
+    public function testToken()
+    {
+        $client = $this->getClient();
+
+        $client->setRefreshToken($this->config['refresh_token']);
+        $this->assertEquals($this->config['refresh_token'], $client->getRefreshToken());
+
+        $token = $client->generateToken();
+        $this->assertEquals($this->config['account_token'], $token);
+        $this->assertEquals($token, $client->getToken());
     }
 
     /**
@@ -80,8 +106,7 @@ final class ClientTest extends TestCase
      */
     public function testUser()
     {
-        $client = $this->getClient();
-        $client->setToken($this->config['account_token']);
+        $client = $this->getClient(true);
 
         $user = $client->user()->getMe();
 
@@ -144,8 +169,7 @@ final class ClientTest extends TestCase
      */
     public function testAdverts()
     {
-        $client = $this->getClient();
-        $client->setToken($this->config['account_token']);
+        $client = $this->getClient(true);
 
         $city = $client->cities()->get(10);
         $category = $client->categories()->get(100);
@@ -183,8 +207,13 @@ final class ClientTest extends TestCase
         $advert = $client->adverts()->create($builder->getData());
         $this->assertArrayHasKey('id', $advert);
 
+        $builder->addTitle('This is updated title');
+        $builder->addDescription('This is updated description');
+        $client->adverts()->update($advert['id'], $builder->getData());
+
         $testAdvert = $client->adverts()->get($advert['id']);
-        $this->assertEquals($testAdvert['id'], $advert['id']);
+        $this->assertEquals('This is updated title', $testAdvert['title']);
+        $this->assertEquals('This is updated description', $testAdvert['description']);
 
         $client->adverts()->delete($advert['id']);
     }
@@ -207,16 +236,23 @@ final class ClientTest extends TestCase
     }
 
     /**
+     * @param bool $withAccountToken
+     *
      * @return Client
      */
-    private function getClient()
+    private function getClient($withAccountToken = false)
     {
         static $client;
 
         if (null === $client) {
             try {
                 $client = new Client($this->getCredentials(), $this->config['country_iso']);
-                $client->generateToken();
+
+                if ($withAccountToken) {
+                    $client->setToken($this->config['account_token']);
+                } else {
+                    $client->generateToken();
+                }
             } catch (OlxException $ex) {
                 $this->fail($ex->getMessage());
             }

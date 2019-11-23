@@ -190,7 +190,7 @@ class Client
         $this->token = $token['access_token'];
         $this->refreshToken = $token['refresh_token'] ?? null;
 
-        return $this->token;
+        return $token['access_token'];
     }
 
     /**
@@ -260,11 +260,9 @@ class Client
     }
 
     /**
-     * @param $token
-     *
      * @return string|null
      */
-    public function getToken($token)
+    public function getToken()
     {
         return $this->token;
     }

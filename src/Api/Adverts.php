@@ -50,6 +50,20 @@ class Adverts extends ApiResource
 
     /**
      * @param int $id
+     * @param array $advert
+     *
+     * @return array|null
+     *
+     * @throws OlxException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function update(int $id, array $advert)
+    {
+        return $this->request('PUT', sprintf('%s/%d', $this->getEndpoint(), $id), $advert);
+    }
+
+    /**
+     * @param int $id
      *
      * @throws OlxException
      *

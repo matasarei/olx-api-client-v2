@@ -53,7 +53,7 @@ abstract class ApiResource
 
     /**
      * @param string $method
-     * @param null $endpoint
+     * @param string|null $endpoint
      * @param array $data
      *
      * @return array|null
@@ -61,7 +61,7 @@ abstract class ApiResource
      * @throws OlxException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    protected function request(string $method = 'GET', $endpoint = null, $data = [])
+    protected function request(string $method = 'GET', string $endpoint = null, array $data = [])
     {
         $response = $this->client->request($method, $endpoint ?? $this->getEndpoint(), $data);
 
@@ -77,7 +77,7 @@ abstract class ApiResource
      * @throws OlxException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    protected function getWithLimit($limit, $offset = 0)
+    protected function getWithLimit(int $limit, int $offset = 0)
     {
         return $this->request('GET', $this->getEndpoint(), [
             'limit' => $limit,
