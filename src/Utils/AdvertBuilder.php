@@ -16,7 +16,8 @@ class AdvertBuilder
      */
     protected $data = [
         'advertiser_type' => self::TYPE_PRIVATE,
-        'attributes' => []
+        'attributes' => [],
+        'images' => [],
     ];
 
     /**
@@ -103,15 +104,17 @@ class AdvertBuilder
 
     /**
      * @param int $cityId
+     * @param int|null $districtId
      * @param float|null $latitude
      * @param float|null $longitude
      *
      * @return $this
      */
-    public function addLocation(int $cityId, float $latitude = null, float $longitude = null)
+    public function addLocation(int $cityId, int $districtId = null, float $latitude = null, float $longitude = null)
     {
         return $this->set('location', [
             'city_id' => $cityId,
+            'district_id' => $districtId,
             'latitude' => $latitude,
             'longitude' => $longitude
         ]);
@@ -149,6 +152,16 @@ class AdvertBuilder
         ];
 
         return $this;
+    }
+
+    /**
+     * @param string $url
+     */
+    public function addImage(string $url)
+    {
+        $this->data['images'][] = [
+            'url' => $url
+        ];
     }
 
     /**

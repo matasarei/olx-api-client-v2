@@ -182,7 +182,7 @@ final class ClientTest extends TestCase
             ->addCategoryId($category['id'])
             ->addExternalId('12345')
             ->addContact("daniel", "089123134")
-            ->addLocation($city['id'], $city['latitude'], $city['longitude'])
+            ->addLocation($city['id'], null, $city['latitude'], $city['longitude'])
             ->addPrice(12300)
         ;
 
