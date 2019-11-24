@@ -5,7 +5,7 @@ This package (partially) implements PHP client for OLX Partner API.
 To install the package to your project via [Composer](http://getcomposer.org/) simply run:
 
 ```
-composer require matasarei/olx-api-client
+composer require matasarei/olx-api-client-v2
 ```
 
 ## Documentation
