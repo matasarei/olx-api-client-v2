@@ -71,6 +71,38 @@ class Adverts extends ApiResource
      */
     public function delete(int $id)
     {
-        $this->client->request('DELETE', "partner/adverts/{$id}");
+        $this->client->request('DELETE', sprintf('%s/%d', $this->getEndpoint(), $id));
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return array
+     *
+     * @throws OlxException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function activate(int $id)
+    {
+        return $this->client->request('POST', sprintf('%s/%d/commands', $this->getEndpoint(), $id), [
+            'command' => 'activate'
+        ]);
+    }
+
+    /**
+     * @param int $id
+     * @param bool $isSuccess Successfully sold via OLX
+     *
+     * @return array
+     *
+     * @throws OlxException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function deactivate(int $id, bool $isSuccess)
+    {
+        return $this->client->request('POST', sprintf('%s/%d/commands', $this->getEndpoint(), $id), [
+            'command' => 'deactivate',
+            'is_success' => $isSuccess
+        ]);
     }
 }
