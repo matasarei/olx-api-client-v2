@@ -62,16 +62,17 @@ class Adverts extends ApiResource
         return $this->request('PUT', sprintf('%s/%d', $this->getEndpoint(), $id), $advert);
     }
 
-    /**
-     * @param int $id
-     *
-     * @throws OlxException
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
+	/**
+	 * @param int $id
+	 *
+	 * @return array
+	 *
+	 * @throws OlxException
+	 * @throws \GuzzleHttp\Exception\GuzzleException
+	 */
     public function delete(int $id)
     {
-        $this->client->request('DELETE', sprintf('%s/%d', $this->getEndpoint(), $id));
+        return $this->client->request('DELETE', sprintf('%s/%d', $this->getEndpoint(), $id));
     }
 
     /**
