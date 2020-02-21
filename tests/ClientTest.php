@@ -218,6 +218,47 @@ final class ClientTest extends TestCase
         $client->adverts()->delete($advert['id']);
     }
 
+	/**
+	 * @throws OlxException
+	 * @throws \GuzzleHttp\Exception\GuzzleException
+	 */
+	public function testThreads()
+	{
+		$client = $this->getClient();
+
+		$threads = $client->threads()->list(0, 0, 1);
+
+		if (!empty($threads)) {
+			$value = current($threads);
+			$this->assertArrayHasKey('id', $value);
+
+			$thread = $client->threads()->get($value['id']);
+			$this->assertArrayHasKey('advert_id', $thread);
+			$this->assertArrayHasKey('interlocutor_id', $thread);
+			$this->assertArrayHasKey('total_count', $thread);
+			$this->assertArrayHasKey('unread_count', $thread);
+			$this->assertArrayHasKey('created_at', $thread);
+			$this->assertArrayHasKey('is_favourite', $thread);
+
+			$messages = $client->threads()->getMessages($thread['id'], 1);
+			$this->assertNotEmpty($messages);
+
+			$value = current($messages);
+			$this->assertArrayHasKey('id', $value);
+
+			$message = $client->threads()->getMessage($thread['id'], $value['id']);
+			$this->assertArrayHasKey('thread_id', $message);
+			$this->assertArrayHasKey('created_at', $message);
+			$this->assertArrayHasKey('type', $message);
+			$this->assertArrayHasKey('text', $message);
+			$this->assertArrayHasKey('attachments', $message);
+			$this->assertArrayHasKey('is_read', $message);
+			$this->assertArrayHasKey('cvs', $message);
+			$this->assertArrayHasKey('phone', $message);
+		}
+
+	}
+
     /**
      * @return Credentials
      */
