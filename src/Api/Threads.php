@@ -18,127 +18,131 @@ class Threads extends ApiResource
         return 'partner/threads';
     }
 
-	/**
-	 * @param int $advert_id
-	 * @param int $interlocutor_id
-	 * @param int $limit
-	 * @param int $offset
-	 *
-	 * @return array|mixed|null
-	 *
-	 * @throws OlxException
-	 * @throws \GuzzleHttp\Exception\GuzzleException
-	 */
-	public function list(int $advert_id = 0, int $interlocutor_id = 0, $limit = 0, $offset = 0)
-	{
-		$data = [];
+    /**
+     * @param int $advert_id
+     * @param int $interlocutor_id
+     * @param int $limit
+     * @param int $offset
+     *
+     * @return array|mixed|null
+     *
+     * @throws OlxException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function list(int $advert_id = 0, int $interlocutor_id = 0, $limit = 0, $offset = 0)
+    {
+        $data = [];
 
-		if ($advert_id) $data['advert_id'] = $advert_id;
-		if ($interlocutor_id) $data['interlocutor_id'] = $interlocutor_id;
+        if ($advert_id) {
+            $data['advert_id'] = $advert_id;
+        }
 
-		if ($limit > 0) {
-			$data = array_merge($data, [
-				'limit'           => $limit,
-				'offset'          => $offset
-			]);
-		}
+        if ($interlocutor_id) {
+            $data['interlocutor_id'] = $interlocutor_id;
+        }
 
-		if (!empty($data)) {
-			return $this->request('GET', $this->getEndpoint(), $data);
-		}
+        if ($limit > 0) {
+            $data = array_merge($data, [
+                'limit' => $limit,
+                'offset' => $offset
+            ]);
+        }
 
-		return $this->getAll();
-	}
+        if (!empty($data)) {
+            return $this->request('GET', $this->getEndpoint(), $data);
+        }
 
-	/**
-	 * @param int $threadId
-	 * @param int $limit
-	 * @param int $offset
-	 *
-	 * @return array|null
-	 *
-	 * @throws OlxException
-	 * @throws \GuzzleHttp\Exception\GuzzleException
-	 */
-	public function getMessages(int $threadId, $limit = 0, $offset = 0)
-	{
-		$data = [];
+        return $this->getAll();
+    }
 
-		if ($limit > 0) {
-			$data = [
-				'limit'           => $limit,
-				'offset'          => $offset
-			];
-		}
-		return $this->request('GET', sprintf('%s/%d/messages', $this->getEndpoint(), $threadId), $data);
-	}
+    /**
+     * @param int $threadId
+     * @param int $limit
+     * @param int $offset
+     *
+     * @return array|null
+     *
+     * @throws OlxException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getMessages(int $threadId, $limit = 0, $offset = 0)
+    {
+        $data = [];
 
-	/**
-	 * @param int $threadId
-	 * @param int $messageId
-	 *
-	 * @return array|null
-	 *
-	 * @throws OlxException
-	 * @throws \GuzzleHttp\Exception\GuzzleException
-	 */
-	public function getMessage(int $threadId, int $messageId)
-	{
-		return $this->request('GET', sprintf('%s/%d/messages/%d', $this->getEndpoint(), $threadId, $messageId));
-	}
+        if ($limit > 0) {
+            $data = [
+                'limit' => $limit,
+                'offset' => $offset
+            ];
+        }
+        return $this->request('GET', sprintf('%s/%d/messages', $this->getEndpoint(), $threadId), $data);
+    }
 
-	/**
-	 * @param int $threadId
-	 * @param string $text
-	 * @param string[]|null $attachments - url's
-	 *
-	 * @return array|null
-	 *
-	 * @throws OlxException
-	 * @throws \GuzzleHttp\Exception\GuzzleException
-	 */
-	public function reply(int $threadId, string $text, array $attachments = null)
-	{
-		$data = [
-			'text' => $text
-		];
+    /**
+     * @param int $threadId
+     * @param int $messageId
+     *
+     * @return array|null
+     *
+     * @throws OlxException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getMessage(int $threadId, int $messageId)
+    {
+        return $this->request('GET', sprintf('%s/%d/messages/%d', $this->getEndpoint(), $threadId, $messageId));
+    }
 
-		if ($attachments) {
-			//$data['attachments'] = json_encode($attachments);
-			$data['attachments'] = $attachments;
-		}
+    /**
+     * @param int $threadId
+     * @param string $text
+     * @param string[]|null $attachments - url's
+     *
+     * @return array|null
+     *
+     * @throws OlxException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function reply(int $threadId, string $text, array $attachments = null)
+    {
+        $data = [
+            'text' => $text
+        ];
 
-		return $this->request('POST', sprintf('%s/%d/messages', $this->getEndpoint(), $threadId), $data);
-	}
+        if ($attachments) {
+            $data['attachments'] = $attachments;
+        }
 
-	/**
-	 * @param int $threadId
-	 * @return array|null
-	 *
-	 * @throws OlxException
-	 * @throws \GuzzleHttp\Exception\GuzzleException
-	 */
-	public function markAsRead(int $threadId)
-	{
-		return $this->request('POST', sprintf('%s/%d/commands', $this->getEndpoint(), $threadId), [
-			'command' => 'mark-as-read',
-		]);
-	}
+        return $this->request('POST', sprintf('%s/%d/messages', $this->getEndpoint(), $threadId), $data);
+    }
 
-	/**
-	 * @param int $threadId
-	 * @param bool $isFavorite
-	 *
-	 * @return array|null
-	 *
-	 * @throws OlxException
-	 * @throws \GuzzleHttp\Exception\GuzzleException
-	 */
-	public function setFavorite(int $threadId, bool $isFavorite)
-	{
-		return $this->request('POST', sprintf('%s/%d/commands', $this->getEndpoint(), $threadId), [
-			'command' => 'set-favourite',
-			'is_favourite' => $isFavorite
-		]);
-	}
+    /**
+     * @param int $threadId
+     * @return array|null
+     *
+     * @throws OlxException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function markAsRead(int $threadId)
+    {
+        return $this->request('POST', sprintf('%s/%d/commands', $this->getEndpoint(), $threadId), [
+            'command' => 'mark-as-read',
+        ]);
+    }
+
+    /**
+     * @param int $threadId
+     * @param bool $isFavorite
+     *
+     * @return array|null
+     *
+     * @throws OlxException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function setFavorite(int $threadId, bool $isFavorite)
+    {
+        return $this->request('POST', sprintf('%s/%d/commands', $this->getEndpoint(), $threadId), [
+            'command' => 'set-favourite',
+            'is_favourite' => $isFavorite
+        ]);
+    }
 }

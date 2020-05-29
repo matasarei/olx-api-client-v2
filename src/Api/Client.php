@@ -166,15 +166,15 @@ class Client
         return $this->categories;
     }
 
-	/**
-	 * @return Threads
-	 */
-	public function threads()
-	{
-		return $this->threads;
-	}
+    /**
+     * @return Threads
+     */
+    public function threads()
+    {
+        return $this->threads;
+    }
 
-	/**
+    /**
      * @param string|null $accessCode
      * @param string|null $redirectUrl
      *
