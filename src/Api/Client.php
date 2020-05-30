@@ -76,6 +76,11 @@ class Client
     protected $adverts;
 
     /**
+     * @var Threads $threads
+     */
+    protected $threads;
+
+    /**
      * @var User
      */
     protected $user;
@@ -104,6 +109,7 @@ class Client
         $this->cities = new Cities($this);
         $this->categories = new Categories($this);
         $this->adverts = new Adverts($this);
+        $this->threads = new Threads($this);
         $this->user = new User($this);
     }
 
@@ -158,6 +164,14 @@ class Client
     public function categories()
     {
         return $this->categories;
+    }
+
+    /**
+     * @return Threads
+     */
+    public function threads()
+    {
+        return $this->threads;
     }
 
     /**
