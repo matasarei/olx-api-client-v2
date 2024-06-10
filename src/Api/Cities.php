@@ -12,7 +12,7 @@ class Cities extends ApiResource
     /**
      * {@inheritdoc}
      */
-    public function getEndpoint()
+    public function getEndpoint(): string
     {
         return 'partner/cities';
     }

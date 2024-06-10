@@ -6,7 +6,7 @@ use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Response;
-use function GuzzleHttp\Psr7\stream_for;
+use GuzzleHttp\Psr7\Utils;
 
 /**
  * Class Client
@@ -32,7 +32,6 @@ class Client
         self::OLX_PT => "https://www.olx.pt",
         self::OLX_UA => "https://www.olx.ua",
         self::OLX_KZ => "https://www.olx.kz",
-        self::OLX_UZ => "https://www.olx.uz"
     ];
 
     /**
@@ -113,13 +112,36 @@ class Client
         $this->user = new User($this);
     }
 
+    public function cities(): Cities
+    {
+        return $this->cities;
+    }
+
+    public function user(): User
+    {
+        return $this->user;
+    }
+
+    public function adverts(): Adverts
+    {
+        return $this->adverts;
+    }
+
+    public function categories(): Categories
+    {
+        return $this->categories;
+    }
+
+    public function threads(): Threads
+    {
+        return $this->threads;
+    }
+
     /**
      * @param string $redirectUrl Url witch handles income requests from the OLX API
      * @param string $state Random hash that identifies the request
-     *
-     * @return string
      */
-    public function getConnectUrl(string $redirectUrl, string $state)
+    public function getConnectUrl(string $redirectUrl, string $state): string
     {
         return sprintf(
             '%s/oauth/authorize/?%s',
@@ -135,54 +157,12 @@ class Client
     }
 
     /**
-     * @return Cities
-     */
-    public function cities()
-    {
-        return $this->cities;
-    }
-
-    /**
-     * @return User
-     */
-    public function user()
-    {
-        return $this->user;
-    }
-
-    /**
-     * @return Adverts
-     */
-    public function adverts()
-    {
-        return $this->adverts;
-    }
-
-    /**
-     * @return Categories
-     */
-    public function categories()
-    {
-        return $this->categories;
-    }
-
-    /**
-     * @return Threads
-     */
-    public function threads()
-    {
-        return $this->threads;
-    }
-
-    /**
-     * @param string|null $accessCode
-     * @param string|null $redirectUrl
-     *
-     * @return mixed|string|null
+     * @param string|null $accessCode Access code received from the OLX API (optional)
+     * @param string|null $redirectUrl Url witch handles income requests from the OLX API (optional)
      *
      * @throws OlxException
      */
-    public function generateToken(string $accessCode = null, string $redirectUrl = null)
+    public function generateToken(string $accessCode = null, string $redirectUrl = null): string
     {
         try {
             if (null !== $accessCode) {
@@ -331,7 +311,7 @@ class Client
      * @throws OlxException
      * @throws GuzzleException
      */
-    public function request(string $method, string $endpoint, $data = [])
+    public function request(string $method, string $endpoint, $data = []): array
     {
         switch ($method) {
             case 'GET':
@@ -356,8 +336,6 @@ class Client
             $response = $this->client->request($method, $endpoint, $options);
         } catch (ClientException $e) {
             $this->handleException($e);
-
-            return [];
         }
 
         return $this->handleResponse($response);
@@ -370,7 +348,7 @@ class Client
      */
     private function handleResponse(Response $response)
     {
-        $stream = stream_for($response->getBody());
+        $stream = Utils::streamFor($response->getBody());
         $data = json_decode($stream, true, 512, JSON_UNESCAPED_UNICODE);
 
         return $data;
@@ -383,7 +361,7 @@ class Client
      */
     private function handleException(ClientException $e)
     {
-        $stream = stream_for($e->getResponse()->getBody());
+        $stream = Utils::streamFor($e->getResponse()->getBody());
         $details = json_decode($stream, true, 512, JSON_UNESCAPED_UNICODE);
         $message = null;
 

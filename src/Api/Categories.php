@@ -12,7 +12,7 @@ class Categories extends ApiResource
     /**
      * {@inheritdoc}
      */
-    public function getEndpoint()
+    public function getEndpoint(): string
     {
         return 'partner/categories';
     }

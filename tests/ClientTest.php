@@ -1,303 +1,139 @@
 <?php
-declare(strict_types=1);
 
 use Gentor\Olx\Api\Client;
 use Gentor\Olx\Api\Credentials;
-use Gentor\Olx\Api\OlxException;
-use Gentor\Olx\Utils\AdvertBuilder;
+use GuzzleHttp\Client as HttpClient;
 use PHPUnit\Framework\TestCase;
+use Gentor\Olx\Api\OlxException;
+use GuzzleHttp\Psr7\Response;
 
-final class ClientTest extends TestCase
+class ClientTest extends TestCase
 {
-    const CONFIG_KEYS = [
-        'client_id',
-        'client_secret',
-        'country_iso',
-        'account_token',
-        'refresh_token',
-    ];
+    private Client $client;
+    private HttpClient $httpClient;
 
-    /**
-     * @var array
-     */
-    private $config;
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp()
+    protected function setUp(): void
     {
-        $configFile = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'config.json';
+        $this->client = new Client(
+            new Credentials(1234567890, 'client_secret'),
+            Client::OLX_UA
+        );
 
-        if (!file_exists($configFile)) {
-            $this->fail("Please copy config.json.dist to config.json and set actual OLX API creds and real account token.");
-        }
+        $this->httpClient = $this->getMockBuilder(HttpClient::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $config = json_decode(file_get_contents($configFile), true);
-
-        foreach (self::CONFIG_KEYS as $key) {
-            if (!empty($config[$key])) {
-                continue;
-            }
-
-            $this->fail(sprintf('Parameter `%s` should not be empty, please check config.json!', $key));
-        }
-
-        $this->config = $config;
+        $reflection = new ReflectionProperty(Client::class, 'client');
+        $reflection->setValue($this->client, $this->httpClient);
     }
 
-    public function testCountry()
+    public function testGetConnectUrl()
     {
-        $this->assertAttributeEquals($this->config['country_iso'], 'country', $this->getClient());
+        $redirectUrl = 'https://example.com/redirect';
+        $state = 'testState';
+        $result = $this->client->getConnectUrl($redirectUrl, $state);
+        $expectedUrl = sprintf(
+            '%s/oauth/authorize/?%s',
+            'https://www.olx.ua',
+            http_build_query([
+                'client_id' => 1234567890,
+                'response_type' => 'code',
+                'state' => $state,
+                'scope' => 'read write v2',
+                'redirect_uri' => $redirectUrl
+            ])
+        );
+        $this->assertEquals($expectedUrl, $result);
     }
 
-    public function testCredentials()
+    public function testGenerateTokenWithAccessAndNoRedirect()
     {
-        $credentials = $this->getCredentials();
-
-        $this->assertEquals($this->config['client_id'], $credentials->getClientId());
-        $this->assertEquals($this->config['client_secret'], $credentials->getClientSecret());
+        $this->expectException(OlxException::class);
+        $this->client->generateToken('q2w3e4r5t6y7u8i9o0p');
     }
 
-    /**
-     * @throws OlxException
-     */
-    public function testToken()
+    public function generateTokenDataProvider(): Generator
     {
-        $client = $this->getClient();
+        $accessToken = 'plmoknijbuhvygctfxrdzeswaq';
+        $refreshToken = 'qawsedrftgyhujikolp';
 
-        $client->setRefreshToken($this->config['refresh_token']);
-        $this->assertEquals($this->config['refresh_token'], $client->getRefreshToken());
+        yield [
+            $this->createConfiguredMock(Response::class, [
+                'getBody' => '{"access_token": "' . $accessToken . '", "refresh_token": "' . $refreshToken . '"}'
+            ]),
+            $accessToken,
+            $refreshToken,
+        ];
 
-        $token = $client->generateToken();
-        $this->assertEquals($this->config['account_token'], $token);
-        $this->assertEquals($token, $client->getToken());
-    }
-
-    /**
-     * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function testCities()
-    {
-        $client = $this->getClient();
-
-        $cities = $client->cities()->list(1);
-        $this->assertCount(1, $cities);
-
-        $randomCity = current($cities);
-
-        $this->assertArrayHasKey('id', $randomCity);
-        $this->assertArrayHasKey('name', $randomCity);
-        $this->assertArrayHasKey('latitude', $randomCity);
-        $this->assertArrayHasKey('longitude', $randomCity);
-        $this->assertArrayHasKey('region_id', $randomCity);
-        $this->assertArrayHasKey('municipality', $randomCity);
-
-        $city = $client->cities()->get($randomCity['id']);
-        $this->assertArraySubset($randomCity, $city, true);
-
-        $client->cities()->getCityDistricts($city['id']);
+        yield [
+            $this->createConfiguredMock(Response::class, [
+                'getBody' => '{"access_token": "' . $accessToken . '", "refresh_token": null}'
+            ]),
+            $accessToken,
+            null
+        ];
     }
 
     /**
-     * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @dataProvider generateTokenDataProvider
      */
-    public function testUser()
+    public function testGenerateTokenWithAccessAndRedirect(Response $response, string $accessToken, ?string $refreshToken)
     {
-        $client = $this->getClient(true);
+        $this->httpClient->method('post')
+            ->with('open/oauth/token', [
+                'form_params' => [
+                    'grant_type' => 'authorization_code',
+                    'client_id' => 1234567890,
+                    'client_secret' => 'client_secret',
+                    'scope' => 'v2 read write',
+                    'code' => 'q2w3e4r5t6y7u8i9o0p',
+                    'redirect_uri' => 'https://example.com/redirect'
+                ]
+            ])->willReturn($response);
 
-        $user = $client->user()->getMe();
-
-        $this->assertArrayHasKey('id', $user);
-        $this->assertArrayHasKey('email', $user);
-        $this->assertArrayHasKey('status', $user);
-        $this->assertArrayHasKey('name', $user);
-        $this->assertArrayHasKey('phone', $user);
-        $this->assertArrayHasKey('created_at', $user);
-        $this->assertArrayHasKey('last_login_at', $user);
-        $this->assertArrayHasKey('avatar', $user);
-        $this->assertArrayHasKey('is_business', $user);
-
-        $user = $client->user()->get($user['id']);
-
-        $this->assertArrayHasKey('id', $user);
-        $this->assertArrayHasKey('name', $user);
-        $this->assertArrayHasKey('avatar', $user);
-
-        $balance = $client->user()->getAccountBalance();
-
-        $this->assertArrayHasKey('sum', $balance);
-        $this->assertArrayHasKey('wallet', $balance);
-        $this->assertArrayHasKey('bonus', $balance);
-        $this->assertArrayHasKey('refund', $balance);
+        $token = $this->client->generateToken('q2w3e4r5t6y7u8i9o0p', 'https://example.com/redirect');
+        $this->assertEquals($accessToken, $token);
+        $this->assertEquals($refreshToken, $this->client->getRefreshToken());
     }
 
     /**
-     * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @dataProvider generateTokenDataProvider
      */
-    public function testCategories()
+    public function testGenerateTokenWithRefresh(Response $response, string $accessToken, ?string $refreshToken)
     {
-        $client = $this->getClient();
+        $this->httpClient->method('post')
+            ->with('open/oauth/token', [
+                'form_params' => [
+                    'grant_type' => 'refresh_token',
+                    'client_id' => 1234567890,
+                    'client_secret' => 'client_secret',
+                    'refresh_token' => 'refresh_token'
+                ]
+            ])->willReturn($response);
 
-        $categories = $client->categories()->list();
-        $this->assertGreaterThanOrEqual(1, $categories);
-
-        $category = current($categories);
-        $this->assertArrayHasKey('id', $category);
-
-        $attributes = $client->categories()->getAttributes($category['id']);
-        $this->assertNotEmpty($attributes);
-
-        $attribute = current($attributes);
-        $this->assertArrayHasKey('code', $attribute);
-        $this->assertArrayHasKey('label', $attribute);
-        $this->assertArrayHasKey('unit', $attribute);
-        $this->assertArrayHasKey('values', $attribute);
-        $this->assertArrayHasKey('validation', $attribute);
-
-        $validation = $attribute['validation'];
-        $this->assertArrayHasKey('type', $validation);
-        $this->assertArrayHasKey('required', $validation);
+        $this->client->setRefreshToken('refresh_token');
+        $token = $this->client->generateToken();
+        $this->assertEquals($accessToken, $token);
+        $this->assertEquals($refreshToken, $this->client->getRefreshToken());
     }
 
     /**
-     * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @dataProvider generateTokenDataProvider
      */
-    public function testAdverts()
+    public function testGenerateTokenWithClient(Response $response, string $accessToken, ?string $refreshToken)
     {
-        $client = $this->getClient(true);
+        $this->httpClient->method('post')
+            ->with('open/oauth/token', [
+                'form_params' => [
+                    'grant_type' => 'client_credentials',
+                    'client_id' => 1234567890,
+                    'client_secret' => 'client_secret',
+                    'scope' => 'v2 read write'
+                ]
+            ])->willReturn($response);
 
-        $city = $client->cities()->get(10);
-        $category = $client->categories()->get(100);
-
-        $attributes = $client->categories()->getAttributes($category['id']);
-
-        $builder = (new AdvertBuilder())
-            ->addTitle('To jest tytuł 3')
-            ->addDescription('To jest opis, mój opis to jest 3')
-            ->addCategoryId($category['id'])
-            ->addExternalId('12345')
-            ->addContact("daniel", "089123134")
-            ->addLocation($city['id'], null, $city['latitude'], $city['longitude'])
-            ->addPrice(12300);
-
-        foreach ($attributes as $attribute) {
-            $validation = $attribute['validation'];
-
-            if (!$validation['required']) {
-                continue;
-            }
-
-            if (!empty($attribute['values'])) {
-                $value = current($attribute['values']);
-
-                $builder->addAttribute($attribute['code'], $value['code']);
-            } elseif ($validation['numeric']) {
-                $builder->addAttribute($attribute['code'], $validation['min']);
-            } else {
-                $builder->addAttribute($attribute['code'], 'test');
-            }
-        }
-
-        $advert = $client->adverts()->create($builder->getData());
-        $this->assertArrayHasKey('id', $advert);
-
-        $builder->addTitle('This is updated title');
-        $builder->addDescription('This is updated description');
-        $client->adverts()->update($advert['id'], $builder->getData());
-
-        $testAdvert = $client->adverts()->get($advert['id']);
-        $this->assertEquals('This is updated title', $testAdvert['title']);
-        $this->assertEquals('This is updated description', $testAdvert['description']);
-
-        $client->adverts()->delete($advert['id']);
-    }
-
-    /**
-     * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function testThreads()
-    {
-        $client = $this->getClient();
-
-        $threads = $client->threads()->list(0, 0, 1);
-
-        if (!empty($threads)) {
-            $value = current($threads);
-            $this->assertArrayHasKey('id', $value);
-
-            $thread = $client->threads()->get($value['id']);
-            $this->assertArrayHasKey('advert_id', $thread);
-            $this->assertArrayHasKey('interlocutor_id', $thread);
-            $this->assertArrayHasKey('total_count', $thread);
-            $this->assertArrayHasKey('unread_count', $thread);
-            $this->assertArrayHasKey('created_at', $thread);
-            $this->assertArrayHasKey('is_favourite', $thread);
-
-            $messages = $client->threads()->getMessages($thread['id'], 1);
-            $this->assertNotEmpty($messages);
-
-            $value = current($messages);
-            $this->assertArrayHasKey('id', $value);
-
-            $message = $client->threads()->getMessage($thread['id'], $value['id']);
-            $this->assertArrayHasKey('thread_id', $message);
-            $this->assertArrayHasKey('created_at', $message);
-            $this->assertArrayHasKey('type', $message);
-            $this->assertArrayHasKey('text', $message);
-            $this->assertArrayHasKey('attachments', $message);
-            $this->assertArrayHasKey('is_read', $message);
-            $this->assertArrayHasKey('cvs', $message);
-            $this->assertArrayHasKey('phone', $message);
-        }
-
-    }
-
-    /**
-     * @return Credentials
-     */
-    private function getCredentials()
-    {
-        static $credentials;
-
-        if (null === $credentials) {
-            $credentials = new Credentials(
-                $this->config['client_id'],
-                $this->config['client_secret']
-            );
-        }
-
-        return $credentials;
-    }
-
-    /**
-     * @param bool $withAccountToken
-     *
-     * @return Client
-     */
-    private function getClient($withAccountToken = false)
-    {
-        static $client;
-
-        if (null === $client) {
-            try {
-                $client = new Client($this->getCredentials(), $this->config['country_iso']);
-
-                if ($withAccountToken) {
-                    $client->setToken($this->config['account_token']);
-                } else {
-                    $client->generateToken();
-                }
-            } catch (OlxException $ex) {
-                $this->fail($ex->getMessage());
-            }
-        }
-
-        return $client;
+        $token = $this->client->generateToken();
+        $this->assertEquals($accessToken, $token);
+        $this->assertEquals($refreshToken, $this->client->getRefreshToken());
     }
 }

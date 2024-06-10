@@ -2,6 +2,8 @@
 
 namespace Gentor\Olx\Api;
 
+use GuzzleHttp\Exception\GuzzleException;
+
 /**
  * Class Adverts
  *
@@ -9,24 +11,16 @@ namespace Gentor\Olx\Api;
  */
 class Adverts extends ApiResource
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getEndpoint()
+    public function getEndpoint(): string
     {
         return 'partner/adverts';
     }
 
     /**
-     * @param int $limit
-     * @param int $offset
-     *
-     * @return array|mixed|null
-     *
      * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    public function list($limit = 0, $offset = 0)
+    public function list(int $limit = 0, int $offset = 0)
     {
         if ($limit > 0) {
             return $this->getWithLimit($limit, $offset);
@@ -41,7 +35,7 @@ class Adverts extends ApiResource
      * @return array
      *
      * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function create(array $advert)
     {
@@ -55,7 +49,7 @@ class Adverts extends ApiResource
      * @return array|null
      *
      * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function update(int $id, array $advert)
     {
@@ -68,7 +62,7 @@ class Adverts extends ApiResource
 	 * @return array
 	 *
 	 * @throws OlxException
-	 * @throws \GuzzleHttp\Exception\GuzzleException
+	 * @throws GuzzleException
 	 */
     public function delete(int $id)
     {
@@ -81,7 +75,7 @@ class Adverts extends ApiResource
      * @return array
      *
      * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function activate(int $id)
     {
@@ -97,7 +91,7 @@ class Adverts extends ApiResource
      * @return array
      *
      * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function deactivate(int $id, bool $isSuccess)
     {
