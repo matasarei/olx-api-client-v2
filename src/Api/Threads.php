@@ -1,35 +1,21 @@
 <?php
 
-
 namespace Gentor\Olx\Api;
 
-/**
- * Class Threads
- *
- * @package Gentor\Olx\Api
- */
+use GuzzleHttp\Exception\GuzzleException;
+
 class Threads extends ApiResource
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getEndpoint()
+    public function getEndpoint(): string
     {
         return 'partner/threads';
     }
 
     /**
-     * @param int $advert_id
-     * @param int $interlocutor_id
-     * @param int $limit
-     * @param int $offset
-     *
-     * @return array|mixed|null
-     *
      * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    public function list(int $advert_id = 0, int $interlocutor_id = 0, $limit = 0, $offset = 0)
+    public function list(int $advert_id = 0, int $interlocutor_id = 0, $limit = 0, $offset = 0): array
     {
         $data = [];
 
@@ -56,16 +42,10 @@ class Threads extends ApiResource
     }
 
     /**
-     * @param int $threadId
-     * @param int $limit
-     * @param int $offset
-     *
-     * @return array|null
-     *
      * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    public function getMessages(int $threadId, $limit = 0, $offset = 0)
+    public function getMessages(int $threadId, $limit = 0, $offset = 0): array
     {
         $data = [];
 
@@ -79,34 +59,24 @@ class Threads extends ApiResource
     }
 
     /**
-     * @param int $threadId
-     * @param int $messageId
-     *
-     * @return array|null
-     *
      * @throws OlxException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getMessage(int $threadId, int $messageId)
+    public function getMessage(int $threadId, int $messageId): array
     {
-        return $this->request('GET', sprintf('%s/%d/messages/%d', $this->getEndpoint(), $threadId, $messageId));
+        return $this->request(
+            'GET',
+            sprintf('%s/%d/messages/%d', $this->getEndpoint(), $threadId, $messageId)
+        );
     }
 
     /**
-     * @param int $threadId
-     * @param string $text
-     * @param string[]|null $attachments - url's
-     *
-     * @return array|null
-     *
      * @throws OlxException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function reply(int $threadId, string $text, array $attachments = null)
+    public function reply(int $threadId, string $text, array $attachments = null): array
     {
-        $data = [
-            'text' => $text
-        ];
+        $data = ['text' => $text];
 
         if ($attachments) {
             $data['attachments'] = $attachments;
@@ -116,13 +86,10 @@ class Threads extends ApiResource
     }
 
     /**
-     * @param int $threadId
-     * @return array|null
-     *
      * @throws OlxException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function markAsRead(int $threadId)
+    public function markAsRead(int $threadId): array
     {
         return $this->request('POST', sprintf('%s/%d/commands', $this->getEndpoint(), $threadId), [
             'command' => 'mark-as-read',
@@ -130,15 +97,10 @@ class Threads extends ApiResource
     }
 
     /**
-     * @param int $threadId
-     * @param bool $isFavorite
-     *
-     * @return array|null
-     *
      * @throws OlxException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function setFavorite(int $threadId, bool $isFavorite)
+    public function setFavorite(int $threadId, bool $isFavorite): array
     {
         return $this->request('POST', sprintf('%s/%d/commands', $this->getEndpoint(), $threadId), [
             'command' => 'set-favourite',

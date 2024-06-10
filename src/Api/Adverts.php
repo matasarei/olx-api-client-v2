@@ -2,31 +2,20 @@
 
 namespace Gentor\Olx\Api;
 
-/**
- * Class Adverts
- *
- * @package Gentor\Olx\Api
- */
+use GuzzleHttp\Exception\GuzzleException;
+
 class Adverts extends ApiResource
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getEndpoint()
+    public function getEndpoint(): string
     {
         return 'partner/adverts';
     }
 
     /**
-     * @param int $limit
-     * @param int $offset
-     *
-     * @return array|mixed|null
-     *
      * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    public function list($limit = 0, $offset = 0)
+    public function list(int $limit = 0, int $offset = 0): array
     {
         if ($limit > 0) {
             return $this->getWithLimit($limit, $offset);
@@ -36,74 +25,52 @@ class Adverts extends ApiResource
     }
 
     /**
-     * @param array $advert
-     *
-     * @return array
-     *
      * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    public function create(array $advert)
+    public function create(array $advert): array
     {
         return $this->request('POST', $this->getEndpoint(), $advert);
     }
 
     /**
-     * @param int $id
-     * @param array $advert
-     *
-     * @return array|null
-     *
      * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    public function update(int $id, array $advert)
+    public function update(int $id, array $advert): array
     {
         return $this->request('PUT', sprintf('%s/%d', $this->getEndpoint(), $id), $advert);
     }
 
 	/**
-	 * @param int $id
-	 *
-	 * @return array
-	 *
 	 * @throws OlxException
-	 * @throws \GuzzleHttp\Exception\GuzzleException
+	 * @throws GuzzleException
 	 */
-    public function delete(int $id)
+    public function delete(int $id): array
     {
         return $this->client->request('DELETE', sprintf('%s/%d', $this->getEndpoint(), $id));
     }
 
     /**
-     * @param int $id
-     *
-     * @return array
-     *
      * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    public function activate(int $id)
+    public function activate(int $id): array
     {
         return $this->client->request('POST', sprintf('%s/%d/commands', $this->getEndpoint(), $id), [
-            'command' => 'activate'
+            'command' => 'activate',
         ]);
     }
 
     /**
-     * @param int $id
-     * @param bool $isSuccess Successfully sold via OLX
-     *
-     * @return array
-     *
      * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    public function deactivate(int $id, bool $isSuccess)
+    public function deactivate(int $id, bool $isSuccess): array
     {
         return $this->client->request('POST', sprintf('%s/%d/commands', $this->getEndpoint(), $id), [
             'command' => 'deactivate',
-            'is_success' => $isSuccess
+            'is_success' => $isSuccess,
         ]);
     }
 }

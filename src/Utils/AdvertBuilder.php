@@ -2,99 +2,52 @@
 
 namespace Gentor\Olx\Utils;
 
-/**
- * Class AdvertBuilder
- *
- * @package Gentor\Olx\Utils
- */
 class AdvertBuilder
 {
     const TYPE_PRIVATE = 'private';
 
-    /**
-     * @var array
-     */
     protected $data = [
         'advertiser_type' => self::TYPE_PRIVATE,
         'attributes' => [],
         'images' => [],
     ];
 
-    /**
-     * @return array
-     */
-    public function getData()
+    public function getData(): array
     {
         return $this->data;
     }
 
-    /**
-     * @param string $title
-     *
-     * @return $this
-     */
-    public function addTitle(string $title)
+    public function addTitle(string $title): self
     {
         return $this->set('title', $title);
     }
 
-    /**
-     * @param string $description
-     *
-     * @return $this
-     */
-    public function addDescription(string $description)
+    public function addDescription(string $description): self
     {
         return $this->set('description', $description);
     }
 
-    /**
-     * @param int $categoryId
-     *
-     * @return $this
-     */
-    public function addCategoryId(int $categoryId)
+    public function addCategoryId(int $categoryId): self
     {
         return $this->set('category_id', $categoryId);
     }
 
-    /**
-     * @param string $type
-     *
-     * @return $this
-     */
-    public function addType(string $type)
+    public function addType(string $type): self
     {
         return $this->set('advertiser_type', $type);
     }
 
-    /**
-     * @param string $url
-     *
-     * @return $this
-     */
-    public function addExternalUrl(string $url)
+    public function addExternalUrl(string $url): self
     {
         return $this->set('external_url', $url);
     }
 
-    /**
-     * @param string $externalId
-     *
-     * @return $this
-     */
-    public function addExternalId(string $externalId)
+    public function addExternalId(string $externalId): self
     {
         return $this->set('external_id', $externalId);
     }
 
-    /**
-     * @param string $name
-     * @param string $phone
-     *
-     * @return $this
-     */
-    public function addContact(string $name, string $phone)
+    public function addContact(string $name, string $phone): self
     {
         return $this->set('contact', [
             'name' => $name,
@@ -102,16 +55,12 @@ class AdvertBuilder
         ]);
     }
 
-    /**
-     * @param int $cityId
-     * @param int|null $districtId
-     * @param float|null $latitude
-     * @param float|null $longitude
-     *
-     * @return $this
-     */
-    public function addLocation(int $cityId, int $districtId = null, float $latitude = null, float $longitude = null)
-    {
+    public function addLocation(
+        int $cityId,
+        int $districtId = null,
+        float $latitude = null,
+        float $longitude = null
+    ): self {
         return $this->set('location', [
             'city_id' => $cityId,
             'district_id' => $districtId,
@@ -120,12 +69,7 @@ class AdvertBuilder
         ]);
     }
 
-    /**
-     * @param int $price
-     * @param string|null $currency
-     * @return $this
-     */
-    public function addPrice(int $price, string $currency = null)
+    public function addPrice(int $price, string $currency = null): self
     {
         $value = [
             'value' => $price
@@ -138,13 +82,7 @@ class AdvertBuilder
         return $this->set('price', $value);
     }
 
-    /**
-     * @param $code
-     * @param $value
-     *
-     * @return $this
-     */
-    public function addAttribute($code, $value)
+    public function addAttribute($code, $value): self
     {
         $this->data['attributes'][] = [
             'code' => $code,
@@ -154,23 +92,16 @@ class AdvertBuilder
         return $this;
     }
 
-    /**
-     * @param string $url
-     */
-    public function addImage(string $url)
+    public function addImage(string $url): self
     {
         $this->data['images'][] = [
             'url' => $url
         ];
+
+        return $this;
     }
 
-    /**
-     * @param string $name
-     * @param mixed $value
-     *
-     * @return $this
-     */
-    protected function set(string $name, $value)
+    protected function set(string $name, $value): self
     {
         $this->data[$name] = $value;
 
