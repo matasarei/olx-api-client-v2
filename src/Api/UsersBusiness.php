@@ -12,7 +12,7 @@ class UsersBusiness extends ApiResource
     /**
      * @return string
      */
-    public function getEndpoint()
+    public function getEndpoint(): string
     {
         return 'partner/users-business';
     }
