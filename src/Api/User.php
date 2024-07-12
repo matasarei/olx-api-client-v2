@@ -2,50 +2,38 @@
 
 namespace Gentor\Olx\Api;
 
-/**
- * Class User
- *
- * @package Gentor\Olx\Api
- */
+use GuzzleHttp\Exception\GuzzleException;
+
 class User extends ApiResource
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getEndpoint()
+    public function getEndpoint(): string
     {
         return 'partner/users';
     }
 
     /**
-     * @return array
-     *
      * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    public function getMe()
+    public function getMe(): array
     {
         return $this->request('GET', $this->getEndpoint() . '/me');
     }
 
     /**
-     * @return array
-     *
      * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    public function getAccountBalance()
+    public function getAccountBalance(): array
     {
         return $this->request('GET', $this->getEndpoint() . '/me/account-balance');
     }
 
     /**
-     * @return array
-     *
      * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    public function getPaymentMethods()
+    public function getPaymentMethods(): array
     {
         return $this->request('GET', $this->getEndpoint() . '/me/payment-methods');
     }

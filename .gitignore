@@ -1,4 +1,5 @@
 /vendor
-omposer.lock
+/composer.lock
 /tests/config.json
-.idea
+/.idea
+/.phpunit.result.cache

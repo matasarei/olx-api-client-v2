@@ -2,82 +2,51 @@
 
 namespace Gentor\Olx\Api;
 
-/**
- * Class ApiResource
- *
- * @package Gentor\Olx\Api
- */
+use GuzzleHttp\Exception\GuzzleException;
+
 abstract class ApiResource
 {
-    /**
-     * @var Client $client
-     */
-    protected $client;
+    protected Client $client;
 
-    /**
-     * @return string
-     */
-    abstract function getEndpoint();
+    abstract public function getEndpoint(): string;
 
-    /**
-     * @param Client $client
-     */
     public function __construct(Client $client)
     {
         $this->client = $client;
     }
 
     /**
-     * @param int $id
-     *
-     * @return mixed
-     *
      * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    public function get(int $id)
+    public function get(int $id): array
     {
         return $this->request('GET', sprintf('%s/%d', $this->getEndpoint(), $id));
     }
 
     /**
-     * @return array|null
-     *
      * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    public function list()
+    public function list(): array
     {
         return $this->getAll();
     }
 
     /**
-     * @param string $method
-     * @param string|null $endpoint
-     * @param array $data
-     *
-     * @return array|null
-     *
      * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    protected function request(string $method = 'GET', string $endpoint = null, array $data = [])
+    protected function request(string $method = 'GET', string $endpoint = null, array $data = []): array
     {
-        $response = $this->client->request($method, $endpoint ?? $this->getEndpoint(), $data);
-
-        return $response['data'] ?? null;
+        return $this->client->request($method, $endpoint ?? $this->getEndpoint(), $data);
     }
 
     /**
-     * @param int $limit
-     * @param int $offset
-     *
-     * @return array|null
-     *
      * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    protected function getWithLimit(int $limit, int $offset = 0)
+    protected function getWithLimit(int $limit, int $offset = 0): array
     {
         return $this->request('GET', $this->getEndpoint(), [
             'limit' => $limit,
@@ -86,12 +55,10 @@ abstract class ApiResource
     }
 
     /**
-     * @return array|null
-     *
      * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    protected function getAll()
+    protected function getAll(): array
     {
         return $this->request('GET', $this->getEndpoint());
     }

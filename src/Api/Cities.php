@@ -2,31 +2,20 @@
 
 namespace Gentor\Olx\Api;
 
-/**
- * Class Cities
- *
- * @package Gentor\Olx\Api
- */
+use GuzzleHttp\Exception\GuzzleException;
+
 class Cities extends ApiResource
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getEndpoint()
+    public function getEndpoint(): string
     {
         return 'partner/cities';
     }
 
     /**
-     * @param int $limit
-     * @param int $offset
-     * @return array|null
-     *
      * @throws OlxException
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    public function list($limit = 0, $offset = 0)
+    public function list($limit = 0, $offset = 0): array
     {
         if ($limit > 0) {
             return $this->getWithLimit($limit, $offset);
@@ -36,14 +25,10 @@ class Cities extends ApiResource
     }
 
     /**
-     * @param int $cityId
-     *
-     * @return array
-     *
      * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    public function getCityDistricts(int $cityId)
+    public function getCityDistricts(int $cityId): array
     {
         $response = $this->client->request('GET', sprintf('%s/%d/districts', $this->getEndpoint(), $cityId));
 

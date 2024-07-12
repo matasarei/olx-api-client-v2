@@ -2,45 +2,31 @@
 
 namespace Gentor\Olx\Api;
 
-/**
- * Class User
- *
- * @package Gentor\Olx\Api
- */
+use GuzzleHttp\Exception\GuzzleException;
+use InvalidArgumentException;
+
 class UsersBusiness extends ApiResource
 {
-    /**
-     * @return string
-     */
-    public function getEndpoint()
+    public function getEndpoint(): string
     {
         return 'partner/users-business';
     }
 
     /**
-     * @return array
-     *
      * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    public function getMe()
+    public function getMe(): array
     {
         return $this->request('GET', $this->getEndpoint() . '/me');
     }
 
     /**
-     * @param string $name
-     * @param string $description
      * @param array $address Company address, must include next fields: street, number, postcode, city
-     * @param array $phones Phone numbers
-     * @param string $websiteUrl
-     * @param string $subdomain
-     *
-     * @return array
      *
      * @throws OlxException
-     * @throws \InvalidArgumentException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws InvalidArgumentException
+     * @throws GuzzleException
      */
     public function put(
         string $name,
@@ -49,7 +35,7 @@ class UsersBusiness extends ApiResource
         array $phones,
         string $websiteUrl,
         string $subdomain
-    ) {
+    ): array {
         return $this->request('PUT', 'partner/users-business/me', [
             "name" => $name,
             "description" => $description,
@@ -61,13 +47,10 @@ class UsersBusiness extends ApiResource
     }
 
     /**
-     * @return array
-     *
      * @throws OlxException
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    public function getLogos()
+    public function getLogos(): array
     {
         $response = $this->client->request('GET', $this->getEndpoint() . '/me/logos');
 
@@ -75,34 +58,53 @@ class UsersBusiness extends ApiResource
     }
 
     /**
-     * @param string $logoUrl
-     *
-     * @return array
-     *
      * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    public function postLogo(string $logoUrl)
+    public function postLogo(string $logoUrl): array
     {
-        return $this->request('PUT', $this->getEndpoint() . '/me/logos', [
+        return $this->request('POST', $this->getEndpoint() . '/me/logos', [
             "url" => $logoUrl
         ]);
     }
 
     /**
-     * @param int|null $id
-     *
-     * @return mixed
-     *
      * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    public function getBanners(int $id = null)
+    public function deleteLogo(int $id): array
     {
-        if (null !== $id) {
-            return $this->request('GET', sprintf('%s/me/logos/%d', $this->getEndpoint(), $id));
-        }
+        return $this->request('DELETE', sprintf('%s/me/logos/%d', $this->getEndpoint(), $id));
+    }
 
-        return $this->request('GET', $this->getEndpoint() . '/me/logos');
+    /**
+     * @throws OlxException
+     * @throws GuzzleException
+     */
+    public function getBanners(): array
+    {
+        $response = $this->client->request('GET', $this->getEndpoint() . '/me/banners');
+
+        return $response['data'];
+    }
+
+    /**
+     * @throws OlxException
+     * @throws GuzzleException
+     */
+    public function postBanner(string $bannerUrl): array
+    {
+        return $this->request('POST', $this->getEndpoint() . '/me/banners', [
+            "url" => $bannerUrl
+        ]);
+    }
+
+    /**
+     * @throws OlxException
+     * @throws GuzzleException
+     */
+    public function deleteBanner(int $id): array
+    {
+        return $this->request('DELETE', sprintf('%s/me/banners/%d', $this->getEndpoint(), $id));
     }
 }

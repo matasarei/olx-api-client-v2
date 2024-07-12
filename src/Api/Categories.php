@@ -2,32 +2,25 @@
 
 namespace Gentor\Olx\Api;
 
-/**
- * Class Categories
- *
- * @package Gentor\Olx\Api
- */
+use GuzzleHttp\Exception\GuzzleException;
+
 class Categories extends ApiResource
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getEndpoint()
+    public function getEndpoint(): string
     {
         return 'partner/categories';
     }
 
     /**
-     * @param int $categoryId
-     *
-     * @return array
-     *
      * @throws OlxException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    public function getAttributes(int $categoryId)
+    public function getAttributes(int $categoryId): array
     {
-        $response = $this->client->request('GET', sprintf('%s/%d/attributes', $this->getEndpoint(), $categoryId));
+        $response = $this->client->request(
+            'GET',
+            sprintf('%s/%d/attributes', $this->getEndpoint(), $categoryId)
+        );
 
         return $response['data'];
     }

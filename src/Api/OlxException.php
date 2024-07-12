@@ -4,30 +4,26 @@ namespace Gentor\Olx\Api;
 
 use Exception;
 
-/**
- * Class OlxExceptionde
- *
- * @package Gentor\Olx\Api
- */
 class OlxException extends Exception
 {
-    /** @var \stdClass $details */
+    /**
+     * @var \stdClass $details
+     */
     protected $details;
 
     /**
-     * @param string $message
-     * @param int $code
      * @param \stdClass|null $details
      * @param Exception|null $previous
      */
     public function __construct($message = "", $code = 0, $details = null, Exception $previous = null)
     {
-        $this->details = $details;
         parent::__construct($message, $code, $previous);
+
+        $this->details = $details;
     }
 
     /**
-     * @return Exception|\stdClass
+     * @return \stdClass
      */
     public function getDetails()
     {
@@ -42,10 +38,7 @@ class OlxException extends Exception
         return json_encode($this->details, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
     }
 
-    /**
-     * @return bool
-     */
-    public function hasMissingParams()
+    public function hasMissingParams(): bool
     {
         if (isset($this->details->error->details)) {
             $details = (array)$this->details->error->details;

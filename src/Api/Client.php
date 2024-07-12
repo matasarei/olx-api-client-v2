@@ -6,12 +6,9 @@ use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Response;
-use function GuzzleHttp\Psr7\stream_for;
+use GuzzleHttp\Psr7\Utils;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class Client
- * @package Gentor\Olx\Api
- */
 class Client
 {
     const OLX_PL = 'pl';
@@ -20,7 +17,6 @@ class Client
     const OLX_PT = 'pt';
     const OLX_UA = 'ua';
     const OLX_KZ = 'kz';
-    const OLX_UZ = 'uz';
 
     /**
      * @var array
@@ -32,58 +28,19 @@ class Client
         self::OLX_PT => "https://www.olx.pt",
         self::OLX_UA => "https://www.olx.ua",
         self::OLX_KZ => "https://www.olx.kz",
-        self::OLX_UZ => "https://www.olx.uz"
     ];
 
-    /**
-     * @var GuzzleClient
-     */
-    protected $client;
-
-    /**
-     * @var string|null
-     */
-    protected $token;
-
-    /**
-     * @var string|null
-     */
-    protected $refreshToken;
-
-    /**
-     * @var string
-     */
-    protected $country;
-
-    /**
-     * @var array
-     */
-    protected $credentials;
-
-    /**
-     * @var Cities $cities
-     */
-    protected $cities;
-
-    /**
-     * @var Categories $categories
-     */
-    protected $categories;
-
-    /**
-     * @var Adverts $adverts
-     */
-    protected $adverts;
-
-    /**
-     * @var Threads $threads
-     */
-    protected $threads;
-
-    /**
-     * @var User
-     */
-    protected $user;
+    protected GuzzleClient $client;
+    protected ?string $token = null;
+    protected ?string $refreshToken = null;
+    protected string $country;
+    protected Credentials $credentials;
+    protected Cities $cities;
+    protected Categories $categories;
+    protected Adverts $adverts;
+    protected Threads $threads;
+    protected User $user;
+    protected UsersBusiness $usersBusiness;
 
     /**
      * @param Credentials $credentials
@@ -111,15 +68,44 @@ class Client
         $this->adverts = new Adverts($this);
         $this->threads = new Threads($this);
         $this->user = new User($this);
+        $this->usersBusiness = new UsersBusiness($this);
+    }
+
+    public function cities(): Cities
+    {
+        return $this->cities;
+    }
+
+    public function user(): User
+    {
+        return $this->user;
+    }
+
+    public function usersBusiness(): UsersBusiness
+    {
+        return $this->usersBusiness;
+    }
+
+    public function adverts(): Adverts
+    {
+        return $this->adverts;
+    }
+
+    public function categories(): Categories
+    {
+        return $this->categories;
+    }
+
+    public function threads(): Threads
+    {
+        return $this->threads;
     }
 
     /**
      * @param string $redirectUrl Url witch handles income requests from the OLX API
      * @param string $state Random hash that identifies the request
-     *
-     * @return string
      */
-    public function getConnectUrl(string $redirectUrl, string $state)
+    public function getConnectUrl(string $redirectUrl, string $state): string
     {
         return sprintf(
             '%s/oauth/authorize/?%s',
@@ -135,54 +121,12 @@ class Client
     }
 
     /**
-     * @return Cities
-     */
-    public function cities()
-    {
-        return $this->cities;
-    }
-
-    /**
-     * @return User
-     */
-    public function user()
-    {
-        return $this->user;
-    }
-
-    /**
-     * @return Adverts
-     */
-    public function adverts()
-    {
-        return $this->adverts;
-    }
-
-    /**
-     * @return Categories
-     */
-    public function categories()
-    {
-        return $this->categories;
-    }
-
-    /**
-     * @return Threads
-     */
-    public function threads()
-    {
-        return $this->threads;
-    }
-
-    /**
-     * @param string|null $accessCode
-     * @param string|null $redirectUrl
-     *
-     * @return mixed|string|null
+     * @param string|null $accessCode Access code received from the OLX API (optional)
+     * @param string|null $redirectUrl Url witch handles income requests from the OLX API (optional)
      *
      * @throws OlxException
      */
-    public function generateToken(string $accessCode = null, string $redirectUrl = null)
+    public function generateToken(string $accessCode = null, string $redirectUrl = null): string
     {
         try {
             if (null !== $accessCode) {
@@ -207,13 +151,7 @@ class Client
         return $token['access_token'];
     }
 
-    /**
-     * @param string $accessCode
-     * @param string $redirectUrl
-     *
-     * @return \Psr\Http\Message\ResponseInterface|Response
-     */
-    protected function generateAccountToken(string $accessCode, string $redirectUrl)
+    protected function generateAccountToken(string $accessCode, string $redirectUrl): ResponseInterface
     {
         return $this->client->post('open/oauth/token',
             [
@@ -229,12 +167,7 @@ class Client
         );
     }
 
-    /**
-     * @param string $refreshToken
-     *
-     * @return \Psr\Http\Message\ResponseInterface
-     */
-    protected function refreshAccountToken(string $refreshToken)
+    protected function refreshAccountToken(string $refreshToken): ResponseInterface
     {
         return $this->client->post('open/oauth/token',
             [
@@ -248,10 +181,7 @@ class Client
         );
     }
 
-    /**
-     * @return \Psr\Http\Message\ResponseInterface
-     */
-    protected function generateClientToken()
+    protected function generateClientToken(): ResponseInterface
     {
         return $this->client->post('open/oauth/token',
             [
@@ -265,46 +195,30 @@ class Client
         );
     }
 
-    /**
-     * @param string $token
-     */
     public function setToken(string $token)
     {
         $this->token = $token;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getToken()
+    public function getToken(): ?string
     {
         return $this->token;
     }
 
-    /**
-     * @param string $refreshToken
-     */
     public function setRefreshToken(string $refreshToken)
     {
         $this->refreshToken = $refreshToken;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getRefreshToken()
+    public function getRefreshToken(): ?string
     {
         return $this->refreshToken;
     }
 
     /**
-     * @param bool $includeToken
-     *
-     * @return array
-     *
      * @throws OlxException
      */
-    protected function getHeaders($includeToken = true)
+    protected function getHeaders($includeToken = true): array
     {
         $headers = [
             'Accept' => 'application/json',
@@ -322,16 +236,10 @@ class Client
     }
 
     /**
-     * @param string $method
-     * @param string $endpoint
-     * @param array $data
-     *
-     * @return array
-     *
      * @throws OlxException
      * @throws GuzzleException
      */
-    public function request(string $method, string $endpoint, $data = [])
+    public function request(string $method, string $endpoint, array $data = []): array
     {
         switch ($method) {
             case 'GET':
@@ -356,34 +264,25 @@ class Client
             $response = $this->client->request($method, $endpoint, $options);
         } catch (ClientException $e) {
             $this->handleException($e);
-
-            return [];
         }
 
         return $this->handleResponse($response);
     }
 
-    /**
-     * @param Response $response
-     *
-     * @return mixed
-     */
-    private function handleResponse(Response $response)
+    private function handleResponse(Response $response): array
     {
-        $stream = stream_for($response->getBody());
+        $stream = Utils::streamFor($response->getBody());
         $data = json_decode($stream, true, 512, JSON_UNESCAPED_UNICODE);
 
         return $data;
     }
 
     /**
-     * @param ClientException $e
-     *
      * @throws OlxException
      */
     private function handleException(ClientException $e)
     {
-        $stream = stream_for($e->getResponse()->getBody());
+        $stream = Utils::streamFor($e->getResponse()->getBody());
         $details = json_decode($stream, true, 512, JSON_UNESCAPED_UNICODE);
         $message = null;
 
