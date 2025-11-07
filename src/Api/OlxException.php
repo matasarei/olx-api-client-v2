@@ -50,7 +50,7 @@ class OlxException extends Exception
             if (is_array($value) || is_object($value)) {
                 $result .= $this->convertDetailsToString((array)$value, $prefix . $key . '.');
             } else {
-                $result .= $prefix . $key . ': ' . $value . PHP_EOL;
+                $result .= $prefix . $key . ': ' . ($value === null ? 'null' : $value) . PHP_EOL;
             }
         }
         return $result;
