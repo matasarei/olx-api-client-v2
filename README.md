@@ -18,6 +18,8 @@ Official OLX API documentation and developers portal:
 * [Romania](https://developer.olx.ro/api/doc)
 * [Ukraine](https://developer.olx.ua/api/doc)
 
+Check the troubleshooting section if you have any issues.
+
 ## Testing and development
 1. Install vendors
 ```bash

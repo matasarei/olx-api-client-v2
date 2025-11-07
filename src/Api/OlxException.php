@@ -38,6 +38,24 @@ class OlxException extends Exception
         return json_encode($this->details, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
     }
 
+    public function getDetailsAsString(): string
+    {
+        return $this->convertDetailsToString((array)$this->details);
+    }
+
+    private function convertDetailsToString(array $details, string $prefix = ''): string
+    {
+        $result = '';
+        foreach ($details as $key => $value) {
+            if (is_array($value) || is_object($value)) {
+                $result .= $this->convertDetailsToString((array)$value, $prefix . $key . '.');
+            } else {
+                $result .= $prefix . $key . ': ' . ($value === null ? 'null' : $value) . PHP_EOL;
+            }
+        }
+        return $result;
+    }
+
     public function hasMissingParams(): bool
     {
         if (isset($this->details->error->details)) {

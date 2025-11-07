@@ -308,13 +308,13 @@ class Client
     private function handleException(ClientException $e)
     {
         $stream = Utils::streamFor($e->getResponse()->getBody());
-        $details = json_decode($stream, true, 512, JSON_UNESCAPED_UNICODE);
+        $details = json_decode($stream, false, 512, JSON_UNESCAPED_UNICODE);
         $message = null;
 
-        if (!empty($details['error']['message'])) {
-            $message = $details['error']['message'];
-        } elseif (!empty($details['error_description'])) {
-            $message = $details['error_description'];
+        if (!empty($details->error->message)) {
+            $message = $details->error->message;
+        } elseif (!empty($details->error_description)) {
+            $message = $details->error_description;
         }
 
         throw new OlxException($message ?? $e->getMessage(), $e->getCode(), $details);
