@@ -69,11 +69,11 @@ class ThreadsTest extends TestCase
         $this->client->expects($this->once())
             ->method('request')
             ->with('POST', 'partner/threads/1/commands', ['command' => 'mark-as-read'])
-            ->willReturn(['status' => 'success']);
+            ->willReturn([]);
 
         $response = $this->client->threads()->markAsRead(1);
 
-        $this->assertEquals(['status' => 'success'], $response);
+        $this->assertEquals([], $response);
     }
 
     public function testSetFavorite()
@@ -81,10 +81,10 @@ class ThreadsTest extends TestCase
         $this->client->expects($this->once())
             ->method('request')
             ->with('POST', 'partner/threads/1/commands', ['command' => 'set-favourite', 'is_favourite' => true])
-            ->willReturn(['status' => 'success']);
+            ->willReturn([]);
 
         $response = $this->client->threads()->setFavorite(1, true);
 
-        $this->assertEquals(['status' => 'success'], $response);
+        $this->assertEquals([], $response);
     }
 }

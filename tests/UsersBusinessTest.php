@@ -83,11 +83,11 @@ class UsersBusinessTest extends TestCase
         $this->client->expects($this->once())
             ->method('request')
             ->with('DELETE', 'partner/users-business/me/logos/1')
-            ->willReturn(['status' => 'success']);
+            ->willReturn([]);
 
         $response = $this->client->usersBusiness()->deleteLogo(1);
 
-        $this->assertEquals(['status' => 'success'], $response);
+        $this->assertEquals([], $response);
     }
 
     public function testGetBanners()
@@ -119,10 +119,10 @@ class UsersBusinessTest extends TestCase
         $this->client->expects($this->once())
             ->method('request')
             ->with('DELETE', 'partner/users-business/me/banners/1')
-            ->willReturn(['status' => 'success']);
+            ->willReturn([]);
 
         $response = $this->client->usersBusiness()->deleteBanner(1);
 
-        $this->assertEquals(['status' => 'success'], $response);
+        $this->assertEquals([], $response);
     }
 }

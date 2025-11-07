@@ -136,4 +136,74 @@ class ClientTest extends TestCase
         $this->assertEquals($accessToken, $token);
         $this->assertEquals($refreshToken, $this->client->getRefreshToken());
     }
+
+    public function testHandleResponse204NoContent()
+    {
+        // Mock a 204 response with empty body
+        $response = $this->createConfiguredMock(Response::class, [
+            'getBody' => '',
+            'getStatusCode' => 204
+        ]);
+
+        $this->httpClient->method('request')
+            ->willReturn($response);
+
+        $this->client->setToken('test_token');
+        $result = $this->client->request('DELETE', 'partner/adverts/1');
+
+        $this->assertEquals([], $result);
+    }
+
+    public function testHandleResponseValidJson()
+    {
+        // Mock a 200 response with valid JSON
+        $response = $this->createConfiguredMock(Response::class, [
+            'getBody' => '{"id": 1, "title": "Test"}',
+            'getStatusCode' => 200
+        ]);
+
+        $this->httpClient->method('request')
+            ->willReturn($response);
+
+        $this->client->setToken('test_token');
+        $result = $this->client->request('GET', 'partner/adverts/1');
+
+        $this->assertEquals(['id' => 1, 'title' => 'Test'], $result);
+    }
+
+    public function testHandleResponseInvalidJsonThrowsException()
+    {
+        // Mock a 200 response with invalid JSON
+        $response = $this->createConfiguredMock(Response::class, [
+            'getBody' => 'invalid json',
+            'getStatusCode' => 200
+        ]);
+
+        $this->httpClient->method('request')
+            ->willReturn($response);
+
+        $this->client->setToken('test_token');
+
+        $this->expectException(OlxException::class);
+        $this->expectExceptionMessage('Failed to decode API response: invalid JSON');
+        $this->client->request('GET', 'partner/adverts/1');
+    }
+
+    public function testHandleResponseEmptyBodyNon204ThrowsException()
+    {
+        // Mock a 200 response with empty body (should be 204)
+        $response = $this->createConfiguredMock(Response::class, [
+            'getBody' => '',
+            'getStatusCode' => 200
+        ]);
+
+        $this->httpClient->method('request')
+            ->willReturn($response);
+
+        $this->client->setToken('test_token');
+
+        $this->expectException(OlxException::class);
+        $this->expectExceptionMessage('API returned empty body for non-204 status code');
+        $this->client->request('GET', 'partner/adverts/1');
+    }
 }

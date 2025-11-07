@@ -271,8 +271,33 @@ class Client
 
     private function handleResponse(Response $response): array
     {
+        if ($response->getStatusCode() === 204) {
+            return [];
+        }
+
         $stream = Utils::streamFor($response->getBody());
         $data = json_decode($stream, true, 512, JSON_UNESCAPED_UNICODE);
+
+        if ($data === null) {
+            $body = (string) $response->getBody();
+            
+            if (trim($body) === '') {
+                throw new OlxException(
+                    'API returned empty body for non-204 status code',
+                    $response->getStatusCode(),
+                    (object) ['status_code' => $response->getStatusCode()]
+                );
+            }
+
+            throw new OlxException(
+                'Failed to decode API response: invalid JSON',
+                $response->getStatusCode(),
+                (object) [
+                    'body' => $body,
+                    'json_error' => json_last_error_msg(),
+                ]
+            );
+        }
 
         return $data;
     }
