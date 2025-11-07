@@ -69,11 +69,11 @@ class AdvertsTest extends TestCase
         $this->client->expects($this->once())
             ->method('request')
             ->with('DELETE', 'partner/adverts/1')
-            ->willReturn(['id' => 1, 'title' => 'Advert 1']);
+            ->willReturn([]);
 
         $response = $this->client->adverts()->delete(1);
 
-        $this->assertEquals(['id' => 1, 'title' => 'Advert 1'], $response);
+        $this->assertEquals([], $response);
     }
 
     public function testActivate()
@@ -81,11 +81,11 @@ class AdvertsTest extends TestCase
         $this->client->expects($this->once())
             ->method('request')
             ->with('POST', 'partner/adverts/1/commands', ['command' => 'activate'])
-            ->willReturn(['id' => 1, 'title' => 'Advert 1']);
+            ->willReturn([]);
 
         $response = $this->client->adverts()->activate(1);
 
-        $this->assertEquals(['id' => 1, 'title' => 'Advert 1'], $response);
+        $this->assertEquals([], $response);
     }
 
     public function testDeactivate()
@@ -93,10 +93,10 @@ class AdvertsTest extends TestCase
         $this->client->expects($this->once())
             ->method('request')
             ->with('POST', 'partner/adverts/1/commands', ['command' => 'deactivate', 'is_success' => true])
-            ->willReturn(['id' => 1, 'title' => 'Advert 1']);
+            ->willReturn([]);
 
         $response = $this->client->adverts()->deactivate(1, true);
 
-        $this->assertEquals(['id' => 1, 'title' => 'Advert 1'], $response);
+        $this->assertEquals([], $response);
     }
 }
