@@ -62,12 +62,13 @@ $response = $client->adverts()->create($request);
 $advertData = $response['data'];
 ```
 
-This applies to all endpoints:
+This response format applies to advert-related endpoints, for example:
 - `GET /adverts` returns `['data' => [array of adverts]]`
 - `POST /adverts` returns `['data' => {advert object}]`
 - `GET /adverts/{id}` returns `['data' => {advert object}]`
 - `PUT /adverts/{id}` returns `['data' => {advert object}]`
 
+Other endpoints may have different response structures. Please refer to the official OLX API documentation for details on the response format of each endpoint.
 ## Testing and development
 1. Install vendors
 ```bash
