@@ -6,7 +6,6 @@ use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\Utils;
 use Psr\Http\Message\ResponseInterface;
 
 class Client
@@ -275,12 +274,10 @@ class Client
             return [];
         }
 
-        $stream = Utils::streamFor($response->getBody());
-        $data = json_decode($stream, true, 512, JSON_UNESCAPED_UNICODE);
+        $body = (string) $response->getBody();
+        $data = json_decode($body, true, 512, JSON_UNESCAPED_UNICODE);
 
         if ($data === null) {
-            $body = (string) $response->getBody();
-            
             if (trim($body) === '') {
                 throw new OlxException(
                     'API returned empty body for non-204 status code',
@@ -307,8 +304,8 @@ class Client
      */
     private function handleException(ClientException $e)
     {
-        $stream = Utils::streamFor($e->getResponse()->getBody());
-        $details = json_decode($stream, false, 512, JSON_UNESCAPED_UNICODE);
+        $body = (string) $e->getResponse()->getBody();
+        $details = json_decode($body, false, 512, JSON_UNESCAPED_UNICODE);
         $message = null;
 
         if (!empty($details->error->message)) {
