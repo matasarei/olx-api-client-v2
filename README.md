@@ -20,6 +20,55 @@ Official OLX API documentation and developers portal:
 
 Check the troubleshooting section if you have any issues.
 
+## Usage
+
+### Basic Example
+```php
+use Gentor\Olx\Api\Client;
+use Gentor\Olx\Api\Credentials;
+
+$credentials = new Credentials('your_client_id', 'your_client_secret');
+$client = new Client($credentials, Client::OLX_UA);
+
+// Create an advert
+$response = $client->adverts()->create([
+    'title' => 'My Product',
+    'description' => 'Product description...',
+    'category_id' => 123,
+    // ... other required fields
+]);
+
+// Access the created advert data
+$advertData = $response['data'];
+echo "Created advert ID: " . $advertData['id'];
+echo "Status: " . $advertData['status'];
+```
+
+### Important: API Response Format
+All OLX API responses wrap the actual data in a `data` key according to the official API specification:
+
+```php
+// What you get from the API:
+[
+  'data' => [
+    'id' => 905890605,
+    'status' => 'active',
+    // ... other advert fields
+  ]
+]
+
+// Access the actual data:
+$response = $client->adverts()->create($request);
+$advertData = $response['data'];
+```
+
+This response format applies to advert-related endpoints, for example:
+- `GET /adverts` returns `['data' => [array of adverts]]`
+- `POST /adverts` returns `['data' => {advert object}]`
+- `GET /adverts/{id}` returns `['data' => {advert object}]`
+- `PUT /adverts/{id}` returns `['data' => {advert object}]`
+
+Other endpoints may have different response structures. Please refer to the official OLX API documentation for details on the response format of each endpoint.
 ## Testing and development
 1. Install vendors
 ```bash

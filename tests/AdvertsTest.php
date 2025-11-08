@@ -21,11 +21,11 @@ class AdvertsTest extends TestCase
         $this->client->expects($this->once())
             ->method('request')
             ->with('GET', 'partner/adverts/1')
-            ->willReturn(['id' => 1, 'title' => 'Advert 1']);
+            ->willReturn(['data' => ['id' => 1, 'title' => 'Advert 1']]);
 
         $response = $this->client->adverts()->get(1);
 
-        $this->assertEquals(['id' => 1, 'title' => 'Advert 1'], $response);
+        $this->assertEquals(['data' => ['id' => 1, 'title' => 'Advert 1']], $response);
     }
 
     public function testList()
@@ -33,11 +33,11 @@ class AdvertsTest extends TestCase
         $this->client->expects($this->once())
             ->method('request')
             ->with('GET', 'partner/adverts')
-            ->willReturn([['id' => 1, 'title' => 'Advert 1'], ['id' => 2, 'title' => 'Advert 2']]);
+            ->willReturn(['data' => [['id' => 1, 'title' => 'Advert 1'], ['id' => 2, 'title' => 'Advert 2']]]);
 
         $response = $this->client->adverts()->list();
 
-        $this->assertEquals([['id' => 1, 'title' => 'Advert 1'], ['id' => 2, 'title' => 'Advert 2']], $response);
+        $this->assertEquals(['data' => [['id' => 1, 'title' => 'Advert 1'], ['id' => 2, 'title' => 'Advert 2']]], $response);
     }
 
     public function testCreate()
@@ -45,11 +45,11 @@ class AdvertsTest extends TestCase
         $this->client->expects($this->once())
             ->method('request')
             ->with('POST', 'partner/adverts', ['title' => 'Advert 1'])
-            ->willReturn(['id' => 1, 'title' => 'Advert 1']);
+            ->willReturn(['data' => ['id' => 1, 'title' => 'Advert 1']]);
 
         $response = $this->client->adverts()->create(['title' => 'Advert 1']);
 
-        $this->assertEquals(['id' => 1, 'title' => 'Advert 1'], $response);
+        $this->assertEquals(['data' => ['id' => 1, 'title' => 'Advert 1']], $response);
     }
 
     public function testUpdate()
@@ -57,11 +57,11 @@ class AdvertsTest extends TestCase
         $this->client->expects($this->once())
             ->method('request')
             ->with('PUT', 'partner/adverts/1', ['title' => 'Advert 1'])
-            ->willReturn(['id' => 1, 'title' => 'Advert 1']);
+            ->willReturn(['data' => ['id' => 1, 'title' => 'Advert 1']]);
 
         $response = $this->client->adverts()->update(1, ['title' => 'Advert 1']);
 
-        $this->assertEquals(['id' => 1, 'title' => 'Advert 1'], $response);
+        $this->assertEquals(['data' => ['id' => 1, 'title' => 'Advert 1']], $response);
     }
 
     public function testDelete()
