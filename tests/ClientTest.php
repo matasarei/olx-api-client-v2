@@ -58,17 +58,13 @@ class ClientTest extends TestCase
         $refreshToken = 'qawsedrftgyhujikolp';
 
         yield [
-            $this->createConfiguredMock(Response::class, [
-                'getBody' => '{"access_token": "' . $accessToken . '", "refresh_token": "' . $refreshToken . '"}'
-            ]),
+            new Response(200, [], '{"access_token": "' . $accessToken . '", "refresh_token": "' . $refreshToken . '"}'),
             $accessToken,
             $refreshToken,
         ];
 
         yield [
-            $this->createConfiguredMock(Response::class, [
-                'getBody' => '{"access_token": "' . $accessToken . '", "refresh_token": null}'
-            ]),
+            new Response(200, [], '{"access_token": "' . $accessToken . '", "refresh_token": null}'),
             $accessToken,
             null
         ];
@@ -139,11 +135,8 @@ class ClientTest extends TestCase
 
     public function testHandleResponse204NoContent()
     {
-        // Mock a 204 response with empty body
-        $response = $this->createConfiguredMock(Response::class, [
-            'getBody' => '',
-            'getStatusCode' => 204
-        ]);
+        // A 204 response with empty body
+        $response = new Response(204, [], '');
 
         $this->httpClient->method('request')
             ->willReturn($response);
@@ -156,11 +149,8 @@ class ClientTest extends TestCase
 
     public function testHandleResponseValidJson()
     {
-        // Mock a 200 response with valid JSON
-        $response = $this->createConfiguredMock(Response::class, [
-            'getBody' => '{"id": 1, "title": "Test"}',
-            'getStatusCode' => 200
-        ]);
+        // A 200 response with valid JSON
+        $response = new Response(200, [], '{"id": 1, "title": "Test"}');
 
         $this->httpClient->method('request')
             ->willReturn($response);
@@ -173,11 +163,8 @@ class ClientTest extends TestCase
 
     public function testHandleResponseInvalidJsonThrowsException()
     {
-        // Mock a 200 response with invalid JSON
-        $response = $this->createConfiguredMock(Response::class, [
-            'getBody' => 'invalid json',
-            'getStatusCode' => 200
-        ]);
+        // A 200 response with invalid JSON
+        $response = new Response(200, [], 'invalid json');
 
         $this->httpClient->method('request')
             ->willReturn($response);
@@ -191,11 +178,8 @@ class ClientTest extends TestCase
 
     public function testHandleResponseEmptyBodyNon204ThrowsException()
     {
-        // Mock a 200 response with empty body (should be 204)
-        $response = $this->createConfiguredMock(Response::class, [
-            'getBody' => '',
-            'getStatusCode' => 200
-        ]);
+        // A 200 response with empty body (should be 204)
+        $response = new Response(200, [], '');
 
         $this->httpClient->method('request')
             ->willReturn($response);
