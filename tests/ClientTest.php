@@ -24,6 +24,9 @@ class ClientTest extends TestCase
             ->getMock();
 
         $reflection = new ReflectionProperty(Client::class, 'client');
+        // Required below PHP 8.1, where reflection does not grant access to
+        // non-public members by default. A no-op from 8.1 onwards.
+        $reflection->setAccessible(true);
         $reflection->setValue($this->client, $this->httpClient);
     }
 

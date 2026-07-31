@@ -1,7 +1,10 @@
 name: "Tests"
 
 on:
+  # Branch pushes are covered by the pull_request trigger; listing master here
+  # rather than every push keeps a branch with an open PR from running twice.
   push:
+    branches: ["master"]
   pull_request:
 
 permissions:
