@@ -1,31 +1,109 @@
 name: "Tests"
-on: [push]
+
+on:
+  # Branch pushes are covered by the pull_request trigger; listing master here
+  # rather than every push keeps a branch with an open PR from running twice.
+  push:
+    branches: ["master"]
+  pull_request:
+
 permissions:
   contents: "read"
+
 jobs:
   composer:
     name: Composer config validation
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          tools: composer:v2
+          coverage: none
       - name: Validate composer.json
         run: composer validate --strict
+
+  audit:
+    name: Security audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          tools: composer:v2
+          coverage: none
+      # Resolving is enough to audit; no need to download anything.
+      - name: Resolve dependencies
+        run: composer update --no-install --no-interaction --no-progress
+      # --no-dev: consumers only ever install the "require" block, so a dev-only
+      # advisory is not something this library ships to anyone.
+      - name: Audit runtime dependencies
+        run: composer audit --locked --no-dev
+
   php:
     name: PHP syntax validation
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "7.4"
+          coverage: none
+      # "php -l <dir>" silently reports success without reading anything, so
+      # every file has to be passed individually.
       - name: Check PHP syntax
-        run: php -l src/ tests/
+        run: find src tests -name '*.php' -print0 | xargs -0 -n1 -P4 php -l
+
   phpunit:
-    name: PHPUnit tests
+    name: PHPUnit (PHP ${{ matrix.php }}, ${{ matrix.deps }})
     runs-on: ubuntu-latest
     strategy:
+      # Without this, the first failing job cancels the rest and hides which
+      # combinations actually broke.
+      fail-fast: false
       matrix:
-        php_version: [7.4, 8.0, 8.1, 8.2]
+        php: ["7.4", "8.0", "8.1", "8.2", "8.3", "8.4", "8.5"]
+        deps: ["highest"]
+        include:
+          # Floor of every constraint, at both ends of the supported PHP range.
+          - { php: "7.4", deps: "lowest" }
+          - { php: "8.5", deps: "lowest" }
+          # The Guzzle 7 half of "^7.4 || ^8.0". Default resolution always picks
+          # Guzzle 8, so without this the 7.x path ships untested.
+          - { php: "7.4", deps: "guzzle7" }
+          - { php: "8.5", deps: "guzzle7" }
     steps:
-      - uses: actions/checkout@v3
-      - uses: php-actions/composer@v6
+      - uses: actions/checkout@v5
+      - uses: shivammathur/setup-php@v2
         with:
-          php_version: ${{ matrix.php_version }}
-      - run: vendor/bin/phpunit
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          coverage: none
+
+      # "update" rather than "install": it re-resolves against Packagist, so
+      # Composer refuses to load versions with security advisories. That is what
+      # turns a dependency going vulnerable into a red build instead of a bug
+      # report from someone who cannot install the package (see issue #9).
+      - name: Install dependencies (${{ matrix.deps }})
+        run: |
+          case "${{ matrix.deps }}" in
+            highest)
+              composer update --no-interaction --no-progress
+              ;;
+            lowest)
+              composer update --prefer-lowest --prefer-stable --no-interaction --no-progress
+              ;;
+            guzzle7)
+              composer update --no-interaction --no-progress \
+                --with "guzzlehttp/guzzle:^7.15" \
+                --with "guzzlehttp/psr7:^2.13"
+              ;;
+          esac
+
+      - name: Show resolved HTTP stack
+        run: composer show --locked | grep -E 'guzzlehttp/(guzzle|psr7) '
+
+      - name: Run tests
+        run: vendor/bin/phpunit
