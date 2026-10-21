@@ -15,7 +15,7 @@ class OlxException extends Exception
      * @param \stdClass|null $details
      * @param Exception|null $previous
      */
-    public function __construct($message = "", $code = 0, $details = null, Exception $previous = null)
+    public function __construct($message = "", $code = 0, $details = null, ?Exception $previous = null)
     {
         parent::__construct($message, $code, $previous);
 

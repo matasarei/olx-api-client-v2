@@ -37,7 +37,7 @@ abstract class ApiResource
      * @throws OlxException
      * @throws GuzzleException
      */
-    protected function request(string $method = 'GET', string $endpoint = null, array $data = []): array
+    protected function request(string $method = 'GET', ?string $endpoint = null, array $data = []): array
     {
         return $this->client->request($method, $endpoint ?? $this->getEndpoint(), $data);
     }

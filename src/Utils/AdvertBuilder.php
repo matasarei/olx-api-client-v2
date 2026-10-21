@@ -57,9 +57,9 @@ class AdvertBuilder
 
     public function addLocation(
         int $cityId,
-        int $districtId = null,
-        float $latitude = null,
-        float $longitude = null
+        ?int $districtId = null,
+        ?float $latitude = null,
+        ?float $longitude = null
     ): self {
         return $this->set('location', [
             'city_id' => $cityId,
@@ -69,7 +69,7 @@ class AdvertBuilder
         ]);
     }
 
-    public function addPrice(int $price, string $currency = null): self
+    public function addPrice(int $price, ?string $currency = null): self
     {
         $value = [
             'value' => $price
