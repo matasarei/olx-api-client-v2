@@ -74,7 +74,7 @@ class Threads extends ApiResource
      * @throws OlxException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function reply(int $threadId, string $text, array $attachments = null): array
+    public function reply(int $threadId, string $text, ?array $attachments = null): array
     {
         $data = ['text' => $text];
 

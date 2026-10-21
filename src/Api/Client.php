@@ -125,7 +125,7 @@ class Client
      *
      * @throws OlxException
      */
-    public function generateToken(string $accessCode = null, string $redirectUrl = null): string
+    public function generateToken(?string $accessCode = null, ?string $redirectUrl = null): string
     {
         try {
             if (null !== $accessCode) {
